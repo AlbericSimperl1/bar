@@ -20,6 +20,7 @@ Item {
     property bool isMediaOpen: false
     signal mediaClicked(real clickY)
     signal bluetoothClicked(real clickY)
+    signal notificationsClicked(real clickY)
 
     width: 38
     implicitWidth: 38
@@ -127,31 +128,24 @@ Item {
             }
         }
 
-        // // Settings / System
-        // Text {
-        //     text: "⚙"
-        //     color: barRoot.fgColor
-        //     font.family: barRoot.fontFamily
-        //     font.pixelSize: 23
-        //     Layout.alignment: Qt.AlignHCenter
-        //     MouseArea {
-        //         anchors.fill: parent
-        //         cursorShape: Qt.PointingHandCursor
-        //         onClicked: Quickshell.execDetached([barRoot.rustCmd, "msg", "panel-toggle", "control-center"])
-        //     }
-        // }
 
         // Notifications
+        // Notifications
         Text {
+            id: notificationsWidget
             text: "󰂚"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
             font.pixelSize: 23
             Layout.alignment: Qt.AlignHCenter
+
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked: Quickshell.execDetached([barRoot.rustCmd, "msg", "panel-toggle", "tray-drawer"])
+                onClicked: {
+                    let mapped = notificationsWidget.mapToItem(barRoot.parent, 0, 0);
+                    barRoot.notificationsClicked(mapped.y + notificationsWidget.height / 2);
+                }
             }
         }
 

@@ -180,6 +180,7 @@ ShellRoot {
 
                         onMediaClicked: sidebarPanel.togglePanel("media", clickY)
                         onBluetoothClicked: sidebarPanel.togglePanel("bluetooth", clickY)
+                        onNotificationsClicked: sidebarPanel.togglePanel("notifications", clickY) // <-- VOEG DEZE REGEL TOE
                     }
 
                     // 3. Uitgeklapt Inhoudspaneel
@@ -210,6 +211,15 @@ ShellRoot {
                             id: bluetoothPanel
                             anchors.fill: parent
                             visible: sidebarPanel.activePanel === "bluetooth"
+                            fgColor: root.fg
+                            accentColor: root.accent
+                            fontFamily: root.fontFamily
+                        }
+
+                        NotificationsPanel {
+                            id: notificationsPanel
+                            anchors.fill: parent
+                            visible: sidebarPanel.activePanel === "notifications"
                             fgColor: root.fg
                             accentColor: root.accent
                             fontFamily: root.fontFamily
