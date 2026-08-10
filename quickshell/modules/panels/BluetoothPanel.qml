@@ -28,7 +28,7 @@ Item {
     Process {
         id: btProcess
         // Zorg dat dit pad klopt!
-        command: ["/home/alberic/.config/bar/rust/target/debug/bar-backend"]
+        command: ["/home/alberic/bar/rust/target/debug/bar-backend"]
 
         stdout: SplitParser {
             onRead: line => {
