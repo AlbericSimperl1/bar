@@ -8,16 +8,26 @@ Item {
 
     property color fgColor: "#fff7e5"
     property color accentColor: "#ebd9b9"
-    property color cardColor: "#15ffffff"
+    property color dimColor: "#66fff7e5"
+    property color lineColor: "#20ffffff"
     property string fontFamily: "mononoki"
 
     // State om apparaten in op te slaan
     property var devices: []
 
+    // Filter functies voor de lijsten
+    function getConnectedDevices() {
+        return devices.filter(d => d.connected === true);
+    }
+
+    function getPairedDevices() {
+        return devices.filter(d => d.connected === false);
+    }
+
     // Dit proces runt jouw Rust code en vangt de JSON op
     Process {
         id: btProcess
-        // PAS DIT AAN naar het absolute pad van jouw gecompileerde Rust binary!
+        // Zorg dat dit pad klopt!
         command: ["/home/alberic/.config/bar/rust/target/debug/bar-backend"]
 
         stdout: SplitParser {
@@ -36,7 +46,6 @@ Item {
             }
         }
 
-        // Vang ook errors (stderr) op uit Rust
         stderr: SplitParser {
             onRead: line => {
                 console.log("[Rust Backend Error]: " + line);
@@ -48,7 +57,6 @@ Item {
         btProcess.running = true;
     }
 
-    // Hulpfunctie om commando's naar Rust te sturen
     function sendCommand(cmd) {
         btProcess.write(cmd + "\n");
     }
@@ -57,7 +65,7 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 16
-        spacing: 12
+        spacing: 16
 
         // Header
         RowLayout {
@@ -73,148 +81,208 @@ Item {
                 Layout.fillWidth: true
             }
 
-            // Scan Knop
-            Rectangle {
-                implicitWidth: 90
-                implicitHeight: 34
-                radius: 8
-                color: scanMouseArea.containsMouse ? "#40ffffff" : "#20ffffff"
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰈬 Scan"
-                    color: bluetoothPanelRoot.accentColor
-                    font.family: bluetoothPanelRoot.fontFamily
-                    font.pixelSize: 13
-                }
-
+            // Scan Knop (Alleen tekst, geen achtergrond)
+            Text {
+                text: "Scan"
+                color: scanMouseArea.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.accentColor
+                font.family: bluetoothPanelRoot.fontFamily
+                font.pixelSize: 14
                 MouseArea {
                     id: scanMouseArea
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
                     onClicked: bluetoothPanelRoot.sendCommand("scan")
                 }
             }
         }
 
-        // Apparatenlijst
-        ListView {
-            id: deviceList
+        // Scrollable gebied voor de apparaten
+        Flickable {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
-            spacing: 8
+            contentHeight: mainColumn.implicitHeight
+            interactive: true
 
-            model: bluetoothPanelRoot.devices
+            ColumnLayout {
+                id: mainColumn
+                width: parent.width
+                spacing: 20
 
-            delegate: Rectangle {
-                required property var modelData
-                width: deviceList.width
-                height: 60
-                radius: 10
-                color: modelData.connected ? "#30ffffff" : bluetoothPanelRoot.cardColor
-                border.color: modelData.connected ? "#50ebd9b9" : "transparent"
-                border.width: 1
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 14
-                    anchors.rightMargin: 14
-                    spacing: 12
+                // --- SECTIE 1: VERBONDEN APPARATEN ---
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+                    visible: bluetoothPanelRoot.getConnectedDevices().length > 0
 
                     Text {
-                        text: modelData.icon || ""
-                        color: modelData.connected ? bluetoothPanelRoot.accentColor : bluetoothPanelRoot.fgColor
+                        text: "Connected devices"
+                        color: bluetoothPanelRoot.dimColor
                         font.family: bluetoothPanelRoot.fontFamily
-                        font.pixelSize: 22
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-
-                    ColumnLayout {
+                        font.pixelSize: 11
+                        font.capitalization: Font.AllUppercase
                         Layout.fillWidth: true
-                        spacing: 2
+                    }
 
-                        Text {
-                            text: modelData.name || "Onbekend apparaat"
-                            color: bluetoothPanelRoot.fgColor
-                            font.family: bluetoothPanelRoot.fontFamily
-                            font.pixelSize: 14
-                            elide: Text.ElideRight
+                    Repeater {
+                        model: bluetoothPanelRoot.getConnectedDevices()
+
+                        delegate: ColumnLayout {
+                            required property var modelData
                             Layout.fillWidth: true
-                        }
+                            spacing: 0
 
-                        Text {
-                            text: modelData.connected ? "Verbonden" : "Gekoppeld"
-                            color: modelData.connected ? bluetoothPanelRoot.accentColor : "#80fff7e5"
-                            font.family: bluetoothPanelRoot.fontFamily
-                            font.pixelSize: 11
-                        }
-                    }
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Layout.topMargin: 6
+                                Layout.bottomMargin: 12
+                                spacing: 10
 
-                    // Unpair Knop
-                    Rectangle {
-                        implicitWidth: 34
-                        implicitHeight: 34
-                        radius: 6
-                        color: unpairMouseArea.containsMouse ? "#40ff5555" : "transparent"
-                        Layout.alignment: Qt.AlignVCenter
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: "" // Prullenbak icoon
-                            color: "#99fff7e5"
-                            font.family: bluetoothPanelRoot.fontFamily
-                            font.pixelSize: 16
-                        }
-
-                        MouseArea {
-                            id: unpairMouseArea
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: bluetoothPanelRoot.sendCommand("unpair " + modelData.mac)
-                        }
-                    }
-
-                    // Connect / Disconnect Knop
-                    Rectangle {
-                        implicitWidth: 34
-                        implicitHeight: 34
-                        radius: 6
-                        color: connectMouseArea.containsMouse ? "#40ffffff" : "#20ffffff"
-                        Layout.alignment: Qt.AlignVCenter
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData.connected ? "󰂲" : "󰂱"
-                            color: bluetoothPanelRoot.fgColor
-                            font.family: bluetoothPanelRoot.fontFamily
-                            font.pixelSize: 16
-                        }
-
-                        MouseArea {
-                            id: connectMouseArea
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (modelData.connected) {
-                                    bluetoothPanelRoot.sendCommand("disconnect " + modelData.mac);
-                                } else {
-                                    bluetoothPanelRoot.sendCommand("connect " + modelData.mac);
+                                Text {
+                                    text: modelData.icon || ""
+                                    color: bluetoothPanelRoot.accentColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 18
                                 }
+
+                                Text {
+                                    text: modelData.name || "Undiscovered device"
+                                    color: bluetoothPanelRoot.fgColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 14
+                                    Layout.fillWidth: true
+                                }
+
+                                Text {
+                                    text: "Disconnect"
+                                    color: disconnectMa.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.dimColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 13
+                                    MouseArea {
+                                        id: disconnectMa
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+                                        onClicked: bluetoothPanelRoot.sendCommand("disconnect " + modelData.mac)
+                                    }
+                                }
+                            }
+
+                            // De "Trace" (lijn onder het apparaat)
+                            Rectangle {
+                                Layout.fillWidth: true
+                                height: 1
+                                color: bluetoothPanelRoot.lineColor
                             }
                         }
                     }
-                }
-            }
 
-            // Melding als er geen apparaten zijn
-            Text {
-                anchors.centerIn: parent
-                visible: deviceList.count === 0
-                text: "Geen apparaten gevonden"
-                color: "#66fff7e5"
-                font.family: bluetoothPanelRoot.fontFamily
-                font.pixelSize: 14
+                    // Als er alleen connected devices zijn, voeg extra ruimte toe
+                    Item {
+                        Layout.fillHeight: true
+                        visible: bluetoothPanelRoot.getPairedDevices().length === 0
+                    }
+                }
+
+                // --- SECTIE 2: GEKOPPELDE APPARATEN ---
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+                    visible: bluetoothPanelRoot.getPairedDevices().length > 0
+
+                    Text {
+                        text: "Paired devices"
+                        color: bluetoothPanelRoot.dimColor
+                        font.family: bluetoothPanelRoot.fontFamily
+                        font.pixelSize: 11
+                        font.capitalization: Font.AllUppercase
+                        Layout.fillWidth: true
+                    }
+
+                    Repeater {
+                        model: bluetoothPanelRoot.getPairedDevices()
+
+                        delegate: ColumnLayout {
+                            required property var modelData
+                            Layout.fillWidth: true
+                            spacing: 0
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Layout.topMargin: 6
+                                Layout.bottomMargin: 12
+                                spacing: 10
+
+                                Text {
+                                    text: modelData.icon || ""
+                                    color: bluetoothPanelRoot.fgColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 18
+                                }
+
+                                Text {
+                                    text: modelData.name || "Undiscovered device"
+                                    color: bluetoothPanelRoot.fgColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 14
+                                    Layout.fillWidth: true
+                                }
+
+                                Text {
+                                    text: "Unpair"
+                                    color: unpairMa.containsMouse ? "#ff5555" : bluetoothPanelRoot.dimColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 13
+                                    MouseArea {
+                                        id: unpairMa
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+                                        onClicked: bluetoothPanelRoot.sendCommand("unpair " + modelData.mac)
+                                    }
+                                }
+
+                                Text {
+                                    text: "Connect"
+                                    color: connectMa.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.accentColor
+                                    font.family: bluetoothPanelRoot.fontFamily
+                                    font.pixelSize: 13
+                                    MouseArea {
+                                        id: connectMa
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+                                        onClicked: bluetoothPanelRoot.sendCommand("connect " + modelData.mac)
+                                    }
+                                }
+                            }
+
+                            // De "Trace" (lijn onder het apparaat)
+                            Rectangle {
+                                Layout.fillWidth: true
+                                height: 1
+                                color: bluetoothPanelRoot.lineColor
+                            }
+                        }
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+
+                // Melding als er helemaal geen apparaten zijn
+                Text {
+                    visible: bluetoothPanelRoot.devices.length === 0
+                    Layout.fillWidth: true
+                    Layout.topMargin: 40
+                    text: "No devices found"
+                    color: bluetoothPanelRoot.dimColor
+                    font.family: bluetoothPanelRoot.fontFamily
+                    font.pixelSize: 14
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
         }
     }
