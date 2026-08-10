@@ -9,17 +9,15 @@ Item {
     property color fgColor: "#fff7e5"
     property color accentColor: "#ebd9b9"
     property color dimColor: "#66fff7e5"
-    property color lineColor: "#20ffffff"
+    property color softFill: "#10ffffff"     // Achtergrondkleur van de hokjes
+    property color borderCol: "#20ffffff"    // Randkleur van de hokjes
     property string fontFamily: "mononoki"
 
-    // State om apparaten in op te slaan
     property var devices: []
 
-    // Filter functies voor de lijsten
     function getConnectedDevices() {
         return devices.filter(d => d.connected === true);
     }
-
     function getPairedDevices() {
         return devices.filter(d => d.connected === false);
     }
@@ -35,10 +33,7 @@ Item {
                 try {
                     let state = JSON.parse(line);
                     if (state.devices) {
-                        let sortedDevices = [...state.devices].sort((a, b) => {
-                            return (a.connected === b.connected) ? 0 : a.connected ? -1 : 1;
-                        });
-                        bluetoothPanelRoot.devices = sortedDevices;
+                        bluetoothPanelRoot.devices = [...state.devices];
                     }
                 } catch (e) {
                     console.log("JSON Parse error:", e, "Data:", line);
@@ -64,8 +59,8 @@ Item {
     // UI Layout
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 16
-        spacing: 16
+        anchors.margins: 12
+        spacing: 10
 
         // Header
         RowLayout {
@@ -76,17 +71,28 @@ Item {
                 text: "Bluetooth"
                 color: bluetoothPanelRoot.fgColor
                 font.family: bluetoothPanelRoot.fontFamily
-                font.pixelSize: 20
+                font.pixelSize: 16
                 font.bold: true
                 Layout.fillWidth: true
             }
 
-            // Scan Knop (Alleen tekst, geen achtergrond)
-            Text {
-                text: "Scan"
-                color: scanMouseArea.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.accentColor
-                font.family: bluetoothPanelRoot.fontFamily
-                font.pixelSize: 14
+            // Scan Knop (Hokje stijl)
+            Rectangle {
+                implicitWidth: 32
+                implicitHeight: 32
+                radius: 1
+                color: scanMouseArea.containsMouse ? "#20ffffff" : bluetoothPanelRoot.softFill
+                border.color: bluetoothPanelRoot.borderCol
+                border.width: 1
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰑐" // Scan icoon
+                    color: bluetoothPanelRoot.accentColor
+                    font.family: bluetoothPanelRoot.fontFamily
+                    font.pixelSize: 16
+                }
+
                 MouseArea {
                     id: scanMouseArea
                     anchors.fill: parent
@@ -108,57 +114,76 @@ Item {
             ColumnLayout {
                 id: mainColumn
                 width: parent.width
-                spacing: 20
+                spacing: 12
 
                 // --- SECTIE 1: VERBONDEN APPARATEN ---
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 8
+                    spacing: 6
                     visible: bluetoothPanelRoot.getConnectedDevices().length > 0
 
                     Text {
-                        text: "Connected devices"
+                        text: "CONNECTED"
                         color: bluetoothPanelRoot.dimColor
                         font.family: bluetoothPanelRoot.fontFamily
                         font.pixelSize: 11
-                        font.capitalization: Font.AllUppercase
-                        Layout.fillWidth: true
+                        font.bold: true
+                        Layout.leftMargin: 4
                     }
 
                     Repeater {
                         model: bluetoothPanelRoot.getConnectedDevices()
 
-                        delegate: ColumnLayout {
+                        delegate: Rectangle {
                             required property var modelData
                             Layout.fillWidth: true
-                            spacing: 0
+                            implicitHeight: 36
+                            radius: 1
+                            // Lichte accentkleur achtergrond als verbonden
+                            color: Qt.rgba(bluetoothPanelRoot.accentColor.r, bluetoothPanelRoot.accentColor.g, bluetoothPanelRoot.accentColor.b, 0.25)
+                            border.color: bluetoothPanelRoot.accentColor
+                            border.width: 1
 
                             RowLayout {
-                                Layout.fillWidth: true
-                                Layout.topMargin: 6
-                                Layout.bottomMargin: 12
-                                spacing: 10
+                                anchors.fill: parent
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 6
+                                spacing: 8
 
                                 Text {
-                                    text: modelData.icon || ""
+                                    text: modelData.icon || "󰂱"
                                     color: bluetoothPanelRoot.accentColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 18
+                                    font.pixelSize: 16
                                 }
 
                                 Text {
-                                    text: modelData.name || "Undiscovered device"
+                                    text: modelData.name || "Undiscovered"
                                     color: bluetoothPanelRoot.fgColor
                                     font.family: bluetoothPanelRoot.fontFamily
                                     font.pixelSize: 14
+                                    font.bold: true
                                     Layout.fillWidth: true
+                                    elide: Text.ElideRight
                                 }
 
-                                Text {
-                                    text: "Disconnect"
-                                    color: disconnectMa.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.dimColor
-                                    font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                // Disconnect Knop (Hokje)
+                                Rectangle {
+                                    implicitWidth: 28
+                                    implicitHeight: 28
+                                    radius: 1
+                                    color: disconnectMa.containsMouse ? "#20ffffff" : "transparent"
+                                    border.color: bluetoothPanelRoot.borderCol
+                                    border.width: 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "󰂲" // Disconnect icoon
+                                        color: bluetoothPanelRoot.fgColor
+                                        font.family: bluetoothPanelRoot.fontFamily
+                                        font.pixelSize: 14
+                                    }
+
                                     MouseArea {
                                         id: disconnectMa
                                         anchors.fill: parent
@@ -168,72 +193,76 @@ Item {
                                     }
                                 }
                             }
-
-                            // De "Trace" (lijn onder het apparaat)
-                            Rectangle {
-                                Layout.fillWidth: true
-                                height: 1
-                                color: bluetoothPanelRoot.lineColor
-                            }
                         }
-                    }
-
-                    // Als er alleen connected devices zijn, voeg extra ruimte toe
-                    Item {
-                        Layout.fillHeight: true
-                        visible: bluetoothPanelRoot.getPairedDevices().length === 0
                     }
                 }
 
                 // --- SECTIE 2: GEKOPPELDE APPARATEN ---
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 8
+                    spacing: 6
                     visible: bluetoothPanelRoot.getPairedDevices().length > 0
 
                     Text {
-                        text: "Paired devices"
+                        text: "PAIRED"
                         color: bluetoothPanelRoot.dimColor
                         font.family: bluetoothPanelRoot.fontFamily
                         font.pixelSize: 11
-                        font.capitalization: Font.AllUppercase
-                        Layout.fillWidth: true
+                        font.bold: true
+                        Layout.leftMargin: 4
                     }
 
                     Repeater {
                         model: bluetoothPanelRoot.getPairedDevices()
 
-                        delegate: ColumnLayout {
+                        delegate: Rectangle {
                             required property var modelData
                             Layout.fillWidth: true
-                            spacing: 0
+                            implicitHeight: 36
+                            radius: 1
+                            color: bluetoothPanelRoot.softFill
+                            border.color: bluetoothPanelRoot.borderCol
+                            border.width: 1
 
                             RowLayout {
-                                Layout.fillWidth: true
-                                Layout.topMargin: 6
-                                Layout.bottomMargin: 12
-                                spacing: 10
+                                anchors.fill: parent
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 6
+                                spacing: 8
 
                                 Text {
-                                    text: modelData.icon || ""
+                                    text: modelData.icon || "󰂱"
                                     color: bluetoothPanelRoot.fgColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 18
+                                    font.pixelSize: 16
                                 }
 
                                 Text {
-                                    text: modelData.name || "Undiscovered device"
+                                    text: modelData.name || "Undiscovered"
                                     color: bluetoothPanelRoot.fgColor
                                     font.family: bluetoothPanelRoot.fontFamily
                                     font.pixelSize: 14
                                     Layout.fillWidth: true
+                                    elide: Text.ElideRight
                                 }
 
-                                Text {
-                                    text: "Unpair"
-                                    color: unpairMa.containsMouse ? "#ff5555" : bluetoothPanelRoot.dimColor
-                                    font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                // Unpair Knop (Hokje)
+                                Rectangle {
+                                    implicitWidth: 28
+                                    implicitHeight: 28
+                                    radius: 1
+                                    color: unpairMa.containsMouse ? "#40ff5555" : "transparent"
+                                    border.color: bluetoothPanelRoot.borderCol
+                                    border.width: 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "" // Prullenbak icoon
+                                        color: "#99fff7e5"
+                                        font.family: bluetoothPanelRoot.fontFamily
+                                        font.pixelSize: 14
+                                    }
+
                                     MouseArea {
                                         id: unpairMa
                                         anchors.fill: parent
@@ -243,11 +272,23 @@ Item {
                                     }
                                 }
 
-                                Text {
-                                    text: "Connect"
-                                    color: connectMa.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.accentColor
-                                    font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                // Connect Knop (Hokje)
+                                Rectangle {
+                                    implicitWidth: 28
+                                    implicitHeight: 28
+                                    radius: 1
+                                    color: connectMa.containsMouse ? "#20ffffff" : "transparent"
+                                    border.color: bluetoothPanelRoot.borderCol
+                                    border.width: 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "󰂱" // Connect icoon
+                                        color: bluetoothPanelRoot.fgColor
+                                        font.family: bluetoothPanelRoot.fontFamily
+                                        font.pixelSize: 14
+                                    }
+
                                     MouseArea {
                                         id: connectMa
                                         anchors.fill: parent
@@ -257,30 +298,19 @@ Item {
                                     }
                                 }
                             }
-
-                            // De "Trace" (lijn onder het apparaat)
-                            Rectangle {
-                                Layout.fillWidth: true
-                                height: 1
-                                color: bluetoothPanelRoot.lineColor
-                            }
                         }
-                    }
-
-                    Item {
-                        Layout.fillHeight: true
                     }
                 }
 
-                // Melding als er helemaal geen apparaten zijn
+                // Melding als er geen apparaten zijn
                 Text {
                     visible: bluetoothPanelRoot.devices.length === 0
                     Layout.fillWidth: true
-                    Layout.topMargin: 40
-                    text: "No devices found"
+                    Layout.topMargin: 20
+                    text: "NO DEVICES FOUND"
                     color: bluetoothPanelRoot.dimColor
                     font.family: bluetoothPanelRoot.fontFamily
-                    font.pixelSize: 14
+                    font.pixelSize: 13
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
