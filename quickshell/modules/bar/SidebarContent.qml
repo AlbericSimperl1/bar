@@ -125,19 +125,19 @@ Item {
             }
         }
 
-        // Settings / System
-        Text {
-            text: "⚙"
-            color: barRoot.fgColor
-            font.family: barRoot.fontFamily
-            font.pixelSize: 23
-            Layout.alignment: Qt.AlignHCenter
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: Quickshell.execDetached([barRoot.rustCmd, "msg", "panel-toggle", "control-center"])
-            }
-        }
+        // // Settings / System
+        // Text {
+        //     text: "⚙"
+        //     color: barRoot.fgColor
+        //     font.family: barRoot.fontFamily
+        //     font.pixelSize: 23
+        //     Layout.alignment: Qt.AlignHCenter
+        //     MouseArea {
+        //         anchors.fill: parent
+        //         cursorShape: Qt.PointingHandCursor
+        //         onClicked: Quickshell.execDetached([barRoot.rustCmd, "msg", "panel-toggle", "control-center"])
+        //     }
+        // }
 
         // Notifications
         Text {
