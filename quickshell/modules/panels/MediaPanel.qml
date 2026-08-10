@@ -94,7 +94,7 @@ Item {
     Timer {
         interval: 500
         repeat: true
-        running: root.hasPlayer
+        running: true
         onTriggered: {
             if (root.isPlaying && root.trackLength > 0)
                 root.trackPosition = Math.min(root.trackLength, root.trackPosition + 0.5);
