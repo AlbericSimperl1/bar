@@ -25,20 +25,52 @@ Item {
     }
 
     // Dit proces runt jouw Rust code en vangt de JSON op
+    // Process {
+    //     id: btProcess
+    //     // Zorg dat dit pad klopt!.
+    //     command: ["/home/alberic/.config/bar/rust/target/debug/bar-backend"]
+
+    //     stdout: SplitParser {
+    //         onRead: line => {
+    //             try {
+    //                 let state = JSON.parse(line);
+    //                 if (state.devices) {
+    //                     let sortedDevices = [...state.devices].sort((a, b) => {
+    //                         return (a.connected === b.connected) ? 0 : a.connected ? -1 : 1;
+    //                     });
+    //                     bluetoothPanelRoot.devices = sortedDevices;
+    //                 }
+    //             } catch (e) {
+    //                 console.log("JSON Parse error:", e, "Data:", line);
+    //             }
+    //         }
+    //     }
+
+    //     stderr: SplitParser {
+    //         onRead: line => {
+    //             console.log("[Rust Backend Error]: " + line);
+    //         }
+    //     }
+    // }
+
+    // Dit proces runt jouw Rust code en vangt de JSON op
     Process {
         id: btProcess
         // Zorg dat dit pad klopt!
         command: ["/home/alberic/.config/bar/rust/target/debug/bar-backend"]
+
+        // Geef het proces de juiste DBus rechten mee
+        environment: ({
+                "DBUS_SESSION_BUS_ADDRESS": process.env.DBUS_SESSION_BUS_ADDRESS,
+                "XDG_RUNTIME_DIR": process.env.XDG_RUNTIME_DIR
+            })
 
         stdout: SplitParser {
             onRead: line => {
                 try {
                     let state = JSON.parse(line);
                     if (state.devices) {
-                        let sortedDevices = [...state.devices].sort((a, b) => {
-                            return (a.connected === b.connected) ? 0 : a.connected ? -1 : 1;
-                        });
-                        bluetoothPanelRoot.devices = sortedDevices;
+                        bluetoothPanelRoot.devices = [...state.devices];
                     }
                 } catch (e) {
                     console.log("JSON Parse error:", e, "Data:", line);
