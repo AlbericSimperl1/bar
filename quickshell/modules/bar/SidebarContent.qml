@@ -21,6 +21,7 @@ Item {
     signal mediaClicked(real clickY)
     signal bluetoothClicked(real clickY)
     signal notificationsClicked(real clickY)
+    signal networkClicked(real clickY)
 
     width: 38
     implicitWidth: 38
@@ -93,7 +94,7 @@ Item {
                     text: "󰎈"
                     color: barRoot.fgColor
                     font.family: barRoot.fontFamily
-                    font.pixelSize: 23
+                    font.pixelSize: 16
                 }
             }
 
@@ -115,7 +116,7 @@ Item {
             text: ""
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 23
+            font.pixelSize: 18
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
@@ -128,15 +129,31 @@ Item {
             }
         }
 
+        Text {
+            id: networkWidget
+            text: "󰤨"
+            color: barRoot.fgColor
+            font.family: barRoot.fontFamily
+            font.pixelSize: 20
+            Layout.alignment: Qt.AlignHCenter
 
-        // Notifications
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                    let mapped = networkWidget.mapToItem(barRoot.parent, 0, 0);
+                    barRoot.networkClicked(mapped.y + bluetoothWidget.height / 2);
+                }
+            }
+        }
+
         // Notifications
         Text {
             id: notificationsWidget
             text: "󰂚"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 23
+            font.pixelSize: 18
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
@@ -154,7 +171,7 @@ Item {
             text: "⏻"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 23
+            font.pixelSize: 20
             Layout.alignment: Qt.AlignHCenter
             MouseArea {
                 anchors.fill: parent
