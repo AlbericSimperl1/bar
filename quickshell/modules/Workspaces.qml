@@ -30,20 +30,16 @@ ColumnLayout {
 
             property bool hovered: false
 
-            // Drie dynamische hoogtes:
-            // - Actieve workspace: 65px
-            // - Niet-actief maar WEL met open venster(s): 40px
-            // - Niet-actief en HELEMAAL leeg: 20px
-            property real targetHeight: isActive ? 65 : (hasWindows ? 40 : 20)
+            property real targetHeight: isActive ? 90 : (hasWindows ? 60 : 30)
 
             Behavior on targetHeight {
                 NumberAnimation {
-                    duration: 150
+                    duration: 100
                     easing.type: Easing.OutCubic
                 }
             }
 
-            Layout.preferredWidth: 9
+            Layout.preferredWidth: 7
             Layout.preferredHeight: targetHeight
             Layout.alignment: Qt.AlignHCenter
             radius: 100

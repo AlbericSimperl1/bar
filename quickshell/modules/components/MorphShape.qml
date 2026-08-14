@@ -5,7 +5,7 @@ Shape {
     id: root
 
     property real sidebarWidth: 38
-    property real cornerRadius: 12
+    property real cornerRadius: 6
     property real morphW: 0
     property real morphF: 0
     property real morphR: 0
@@ -33,8 +33,8 @@ Shape {
         PathArc {
             x: root.sidebarWidth
             y: root.cornerRadius
-            radiusX: root.cornerRadius
-            radiusY: root.cornerRadius
+            radiusX: 6
+            radiusY: 6
         }
 
         // 2. Rechterrand zijbalk omlaag tot bovenste junction

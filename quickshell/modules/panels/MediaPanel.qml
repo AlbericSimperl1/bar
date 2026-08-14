@@ -9,8 +9,8 @@ import Qt5Compat.GraphicalEffects
 Item {
     id: root
 
-    implicitWidth: 420
-    implicitHeight: 380
+    implicitWidth: 520
+    implicitHeight: 580
 
     property color fgColor: "#fff7e5"
     property color mutedColor: Qt.rgba(1, 0.95, 0.82, 0.78)
@@ -120,7 +120,7 @@ Item {
     Process {
         id: cavaProc
         running: root.isPlaying
-        command: ["bash", "-lc", "cfg=$(mktemp); " + "printf '%s\\n' '[general]' 'bars = 52' 'framerate = 60' 'sensitivity = 160' " + "'[input]' 'method = pipewire' '[output]' 'method = raw' 'raw_target = /dev/stdout' " + "'data_format = ascii' 'ascii_max_range = 12' 'bar_delimiter = 59' 'frame_delimiter = 10' 'channels = mono' " + "'[smoothing]' 'integral = 70' 'monstercat = 1' > \"$cfg\"; " + "cava -p \"$cfg\"; code=$?; rm -f \"$cfg\"; exit $code"]
+        command: ["bash", "-lc", "cfg=$(mktemp); " + "printf '%s\\n' '[general]' 'bars = 70' 'framerate = 60' 'sensitivity = 160' " + "'[input]' 'method = pipewire' '[output]' 'method = raw' 'raw_target = /dev/stdout' " + "'data_format = ascii' 'ascii_max_range = 12' 'bar_delimiter = 59' 'frame_delimiter = 10' 'channels = mono' " + "'[smoothing]' 'integral = 70' 'monstercat = 1' > \"$cfg\"; " + "cava -p \"$cfg\"; code=$?; rm -f \"$cfg\"; exit $code"]
 
         stdout: SplitParser {
             onRead: line => {
@@ -152,8 +152,8 @@ Item {
             // Album Art (met afgeronde hoeken via OpacityMask)
             Item {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 235
-                Layout.preferredHeight: 235
+                Layout.preferredWidth: 335
+                Layout.preferredHeight: 335
 
                 // 1. Bron-afbeelding (verborgen, dient als input)
                 Image {
@@ -206,7 +206,7 @@ Item {
                     text: root.trackTitle
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 14
+                    font.pixelSize: 22
                     font.bold: true
                     elide: Text.ElideRight
                     Layout.fillWidth: true
@@ -216,7 +216,7 @@ Item {
                     text: root.trackArtist
                     color: root.mutedColor
                     font.family: root.fontFamily
-                    font.pixelSize: 12
+                    font.pixelSize: 17
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -256,14 +256,14 @@ Item {
             // Knoppenbalk (Apple-style: grote, strakke iconen zonder achtergrond)
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: 46
+                spacing: 50
 
                 // Vorige nummer
                 Text {
                     text: "\uf048"
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 54
+                    font.pixelSize: 80
                     Layout.alignment: Qt.AlignVCenter
 
                     MouseArea {
@@ -279,7 +279,7 @@ Item {
                     text: root.isPlaying ? "\uf04c" : "\uf04b"
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 56
+                    font.pixelSize: 90
                     Layout.alignment: Qt.AlignVCenter
 
                     MouseArea {
@@ -295,7 +295,7 @@ Item {
                     text: "\uf051"
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 54
+                    font.pixelSize: 80
                     Layout.alignment: Qt.AlignVCenter
 
                     MouseArea {
@@ -318,13 +318,13 @@ Item {
                 spacing: 4
 
                 Repeater {
-                    model: 52
+                    model: 70
 
                     delegate: Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        property real distFromCenter: Math.abs(index - 25.5)
-                        property int mappedIdx: Math.min(51, Math.floor(distFromCenter * 2))
+                        property real distFromCenter: Math.abs(index - 35.5)
+                        property int mappedIdx: Math.min(71, Math.floor(distFromCenter * 2))
 
                         property real val: (root.cavaBars && root.cavaBars.length > mappedIdx) ? root.cavaBars[mappedIdx] : 0
 
@@ -333,17 +333,6 @@ Item {
                         radius: 1.5
                         color: root.cavaColor
                         opacity: 0.25 + (val * 0.75)
-
-                        // Behavior on width {
-                        //     NumberAnimation {
-                        //         duration: 40
-                        //     }
-                        // }
-                        // Behavior on opacity {
-                        //     NumberAnimation {
-                        //         duration: 40
-                        //     }
-                        // }
                     }
                 }
             }

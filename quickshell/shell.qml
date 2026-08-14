@@ -13,18 +13,18 @@ ShellRoot {
     id: root
 
     // ---- Kleuren & Instellingen ----
-    readonly property color barBg: '#80000207'
+    readonly property color barBg: '#30202227'
     readonly property color fg: '#fff7e5'
     readonly property color accent: '#ebd9b9'
     readonly property color borderCol: "#2cffffff"
     readonly property string fontFamily: "mononoki"
 
-    readonly property int sidebarWidth: 38
-    readonly property int marginSize: 2
-    readonly property int cornerRadius: 12
+    readonly property int sidebarWidth: 28
+    readonly property int marginSize: 0
+    readonly property int cornerRadius: 6
 
-    readonly property int panelMaxWidth: 380
-    readonly property int panelMaxHeight: 620
+    readonly property int panelMaxWidth: 480
+    readonly property int panelMaxHeight: 820
     readonly property int filletRadius: 16
     readonly property int panelRadius: 12
 
@@ -54,13 +54,13 @@ ShellRoot {
             property real openP: popoutOpen ? 1 : 0
             Behavior on openP {
                 NumberAnimation {
-                    duration: 200
+                    duration: 130
                     easing.type: Easing.OutCubic
                 }
             }
 
             property real panelTopY: 120
-            property real panelH: 385
+            property real panelH: 585
 
             readonly property real morphW: root.panelMaxWidth * openP
             readonly property real morphF: root.filletRadius * openP
@@ -71,14 +71,14 @@ ShellRoot {
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             color: "transparent"
 
-            margins.top: root.marginSize
-            margins.bottom: root.marginSize
-            margins.left: root.marginSize
+            margins.top: 5
+            margins.bottom: 5
+            margins.left: 4
 
             // Vaste exclusiveZone: enkel de balkbreedte wordt gereserveerd
-            exclusiveZone: root.sidebarWidth + (root.marginSize * 2)
+            exclusiveZone: root.sidebarWidth + 6
 
-            implicitWidth: root.sidebarWidth + root.panelMaxWidth + 4
+            implicitWidth: root.sidebarWidth + root.panelMaxWidth
 
             anchors {
                 top: true
@@ -134,7 +134,7 @@ ShellRoot {
                 }
 
                 const inset = root.cornerRadius + root.filletRadius + 2;
-                const targetH = sidebarBg.height - inset - Math.max(inset, Math.min(clickY - 130, sidebarBg.height - 385 - inset));
+                const targetH = sidebarBg.height - inset - Math.max(inset, Math.min(clickY - 130, sidebarBg.height - 520 - inset));
 
                 panelH = Math.min(root.panelMaxHeight, targetH);
                 panelTopY = Math.max(inset, Math.min(clickY - 130, sidebarBg.height - panelH - inset));

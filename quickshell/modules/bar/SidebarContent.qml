@@ -15,14 +15,14 @@ Item {
     property string rustCmd: "noctalia"
 
     property var activePlayer: null
-    property string fontFamily: "mononoki"
+    property string fontFamily: "JetBrainsMono Nerd Font Mono"
     property color fgColor: "#fff7e5"
     property bool isMediaOpen: false
     signal mediaClicked(real clickY)
     signal bluetoothClicked(real clickY)
 
-    width: 38
-    implicitWidth: 38
+    width: 28
+    implicitWidth: barRoot.width
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.left: parent.left
@@ -48,14 +48,14 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
-        spacing: 20
+        spacing: 15
 
         // Media Trigger Container
         Item {
             id: mediaWidget
             Layout.alignment: Qt.AlignHCenter
-            implicitWidth: 24
-            implicitHeight: 24
+            implicitWidth: 16
+            implicitHeight: 16
 
             readonly property string artUrl: barRoot.activePlayer && barRoot.activePlayer.trackArtUrl ? barRoot.activePlayer.trackArtUrl : ""
 
@@ -125,26 +125,12 @@ Item {
             }
         }
 
-        // // Settings / System
-        // Text {
-        //     text: "⚙"
-        //     color: barRoot.fgColor
-        //     font.family: barRoot.fontFamily
-        //     font.pixelSize: 23
-        //     Layout.alignment: Qt.AlignHCenter
-        //     MouseArea {
-        //         anchors.fill: parent
-        //         cursorShape: Qt.PointingHandCursor
-        //         onClicked: Quickshell.execDetached([barRoot.rustCmd, "msg", "panel-toggle", "control-center"])
-        //     }
-        // }
-
         // Notifications
         Text {
             text: "󰂚"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 23
+            font.pixelSize: 21
             Layout.alignment: Qt.AlignHCenter
             MouseArea {
                 anchors.fill: parent
