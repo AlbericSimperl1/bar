@@ -1,3 +1,4 @@
+// quickshell/modules/components/MorphShape.qml
 import QtQuick 2.15
 import QtQuick.Shapes 1.15
 
@@ -6,16 +7,24 @@ Shape {
 
     property real sidebarWidth: 38
     property real cornerRadius: 6
+    property real panelGap: 8
+    property real panelRadius: 16
+
     property real morphW: 0
-    property real morphF: 0
-    property real morphR: 0
+    property real openFrac: 0
     property real panelTopY: 120
     property real panelH: 260
+
     property color barBg: "#60090c13"
     property color borderCol: "#33ffffff"
 
+    readonly property real panelX: root.sidebarWidth + root.panelGap
+    readonly property real panelW: Math.max(0, root.morphW - root.panelGap)
+    readonly property real panelDrawH: root.panelH * root.openFrac
+
     anchors.fill: parent
 
+    // --- Zijbalk: vaste, losstaande pil, nooit vervormd door het paneel ---
     ShapePath {
         fillColor: root.barBg
         strokeColor: root.borderCol
@@ -25,7 +34,6 @@ Shape {
         startX: root.cornerRadius
         startY: 0
 
-        // 1. Bovenrand zijbalk + bolle hoek rechtsboven
         PathLine {
             x: root.sidebarWidth - root.cornerRadius
             y: 0
@@ -33,53 +41,19 @@ Shape {
         PathArc {
             x: root.sidebarWidth
             y: root.cornerRadius
-            radiusX: 6
-            radiusY: 6
+            radiusX: root.cornerRadius
+            radiusY: root.cornerRadius
         }
-
-        // 2. Rechterrand zijbalk omlaag tot bovenste junction
         PathLine {
             x: root.sidebarWidth
-            y: root.panelTopY - root.morphF
-        }
-
-        // 3. HOLLE BINNENBOOG (balk → paneelbovenrand)
-        PathAngleArc {
-            centerX: root.sidebarWidth + root.morphF
-            centerY: root.panelTopY - root.morphF
-            radiusX: root.morphF
-            radiusY: root.morphF
-            startAngle: 180
-            sweepAngle: -90
-            moveToStart: false
-        }
-
-        // 4. Paneelbovenrand + bolle hoek
-        PathLine {
-            x: root.sidebarWidth + root.morphW - root.morphR
-            y: root.panelTopY
-        }
-        PathArc {
-            x: root.sidebarWidth + root.morphW
-            y: root.panelTopY + root.morphR
-            radiusX: root.morphR
-            radiusY: root.morphR
-        }
-
-        // 5. Paneelrechterrand omlaag; ONDERSTE RECHTERHOEK is één hoek met
-        // constante straal r die meeglijdt met pw (balk- én paneelhoek)
-        PathLine {
-            x: root.sidebarWidth + root.morphW
             y: root.height - root.cornerRadius
         }
         PathArc {
-            x: root.sidebarWidth + root.morphW - root.cornerRadius
+            x: root.sidebarWidth - root.cornerRadius
             y: root.height
             radiusX: root.cornerRadius
             radiusY: root.cornerRadius
         }
-
-        // 6. GEDEELDE onderlijn: paneelonderkant = balkonderkant
         PathLine {
             x: root.cornerRadius
             y: root.height
@@ -90,8 +64,6 @@ Shape {
             radiusX: root.cornerRadius
             radiusY: root.cornerRadius
         }
-
-        // 7. Linkerrand + sluiten
         PathLine {
             x: 0
             y: root.cornerRadius
@@ -101,6 +73,59 @@ Shape {
             y: 0
             radiusX: root.cornerRadius
             radiusY: root.cornerRadius
+        }
+    }
+
+    // --- Popout paneel: volledig losstaand van de balk, eigen afgeronde rechthoek ---
+    ShapePath {
+        fillColor: root.barBg
+        strokeColor: root.borderCol
+        strokeWidth: 2
+        joinStyle: ShapePath.RoundJoin
+        fillRule: ShapePath.WindingFill
+
+        startX: root.panelX + root.panelRadius
+        startY: root.panelTopY
+
+        PathLine {
+            x: root.panelX + root.panelW - root.panelRadius
+            y: root.panelTopY
+        }
+        PathArc {
+            x: root.panelX + root.panelW
+            y: root.panelTopY + root.panelRadius
+            radiusX: root.panelRadius
+            radiusY: root.panelRadius
+        }
+        PathLine {
+            x: root.panelX + root.panelW
+            y: root.panelTopY + root.panelDrawH - root.panelRadius
+        }
+        PathArc {
+            x: root.panelX + root.panelW - root.panelRadius
+            y: root.panelTopY + root.panelDrawH
+            radiusX: root.panelRadius
+            radiusY: root.panelRadius
+        }
+        PathLine {
+            x: root.panelX + root.panelRadius
+            y: root.panelTopY + root.panelDrawH
+        }
+        PathArc {
+            x: root.panelX
+            y: root.panelTopY + root.panelDrawH - root.panelRadius
+            radiusX: root.panelRadius
+            radiusY: root.panelRadius
+        }
+        PathLine {
+            x: root.panelX
+            y: root.panelTopY + root.panelRadius
+        }
+        PathArc {
+            x: root.panelX + root.panelRadius
+            y: root.panelTopY
+            radiusX: root.panelRadius
+            radiusY: root.panelRadius
         }
     }
 }

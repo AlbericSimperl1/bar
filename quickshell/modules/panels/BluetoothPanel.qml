@@ -1,3 +1,4 @@
+// quickshell/modules/panels/BluetoothPanel.qml
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -14,6 +15,10 @@ Item {
 
     // State om apparaten in op te slaan
     property var devices: []
+
+    // Hoogte die dit paneel nodig heeft om zijn inhoud te tonen,
+    // zodat de container niet groter wordt dan nodig (bv. bij 2 devices).
+    readonly property real neededHeight: Math.max(140, (layoutRoot.anchors.margins * 2) + headerRow.implicitHeight + layoutRoot.spacing + mainColumn.implicitHeight)
 
     // Filter functies voor de lijsten
     function getConnectedDevices() {
@@ -66,12 +71,14 @@ Item {
 
     // UI Layout
     ColumnLayout {
+        id: layoutRoot
         anchors.fill: parent
         anchors.margins: 16
         spacing: 16
 
         // Header
         RowLayout {
+            id: headerRow
             Layout.fillWidth: true
             spacing: 10
 
@@ -180,12 +187,6 @@ Item {
                             }
                         }
                     }
-
-                    // Als er alleen connected devices zijn, voeg extra ruimte toe
-                    Item {
-                        Layout.fillHeight: true
-                        visible: bluetoothPanelRoot.getPairedDevices().length === 0
-                    }
                 }
 
                 // --- SECTIE 2: GEKOPPELDE APPARATEN ---
@@ -268,10 +269,6 @@ Item {
                                 color: bluetoothPanelRoot.lineColor
                             }
                         }
-                    }
-
-                    Item {
-                        Layout.fillHeight: true
                     }
                 }
 
