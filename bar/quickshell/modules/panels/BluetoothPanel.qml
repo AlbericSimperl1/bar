@@ -11,7 +11,7 @@ Item {
     property color accentColor: "#ebd9b9"
     property color dimColor: "#66fff7e5"
     property color lineColor: "#20ffffff"
-    property string fontFamily: "JetBrainsMono Nerd Font Mono"
+    property string fontFamily: "Mononoki Nerd Font Mono"
 
     // State om apparaten in op te slaan
     property var devices: []

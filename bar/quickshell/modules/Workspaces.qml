@@ -9,7 +9,7 @@ ColumnLayout {
     spacing: 4
     Layout.alignment: Qt.AlignHCenter
 
-    property int persistentCount: 9
+    property int persistentCount: 5
 
     Repeater {
         model: persistentCount

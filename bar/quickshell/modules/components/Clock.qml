@@ -8,7 +8,7 @@ ColumnLayout {
     // ---- HIER DIT TOEVOEGEN ALS HET ER NIET STAAT ----
     property color fgColor: "#fff7e5"
     property color mutedColor: Qt.rgba(1, 0.95, 0.82, 0.78)
-    property string fontFamily: "JetBrainsMono Nerd Font Mono"
+    property string fontFamily: "Mononoki Nerd Font Mono"
 
     spacing: 0
 

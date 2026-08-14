@@ -16,7 +16,7 @@ Item {
     property color mutedColor: Qt.rgba(1, 0.95, 0.82, 0.78)
     property color accentColor: "#ebd9b9"
     property color cavaColor: "#bbbbbb"
-    property string fontFamily: "mononoki"
+    property string fontFamily: "Mononoki Nerd Font Mono"
     property var player
     property var cavaBars: []
 
