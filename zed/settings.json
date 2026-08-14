@@ -1,0 +1,214 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "show_edit_predictions": false,
+  "languages": {
+    "QML": {
+      "show_edit_predictions": false,
+    },
+  },
+  "edit_predictions": {
+    "mode": "subtle",
+  },
+  "diff_view_style": "unified",
+  "language_models": {
+    "openai_compatible": {
+      "NVIDIA NIM": {
+        "api_url": "https://integrate.api.nvidia.com/v1",
+        "available_models": [
+          {
+            "name": "z-ai/glm-5.2",
+            "max_tokens": 200000,
+            "max_output_tokens": 128000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false,
+            },
+          },
+          {
+            "name": "deepseek-ai/deepseek-v4-pro",
+            "display_name": "NVIDIA: DeepSeek V4 Pro",
+            "max_tokens": 128000,
+          },
+        ],
+      },
+    },
+  },
+  "icon_theme": "Colored Zed Icons Theme Dark",
+  "collaboration_panel": {
+    "button": false,
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "project_panel": {
+    "dock": "left",
+  },
+  "format_on_save": "on",
+  "diagnostics": {
+    "button": true,
+  },
+  "active_pane_modifiers": {
+    "border_size": 0.0,
+  },
+  "status_bar": {
+    "line_endings_button": true,
+    "show_active_file": true,
+    "active_encoding_button": "disabled",
+    "active_language_button": true,
+  },
+  "markdown_preview": {
+    "max_width": 800.0,
+  },
+  "colorize_brackets": true,
+  "helix_mode": false,
+  "relative_line_numbers": "disabled",
+  "inline_code_actions": true,
+  "cli_default_open_behavior": "existing_window",
+  "gutter": {
+    "line_numbers": true,
+    "runnables": false,
+    "breakpoints": false,
+    "bookmarks": false,
+    "folds": false,
+    "min_line_number_digits": 0,
+  },
+  "git": {
+    "git_gutter": "hide",
+  },
+  "indent_guides": {
+    "background_coloring": "disabled",
+    "active_line_width": 3,
+    "line_width": 2,
+    "enabled": true,
+    "coloring": "fixed",
+  },
+  "search": {
+    "button": false,
+  },
+  "agent": {
+    "default_model": {
+      "provider": "NVIDIA NIM",
+      "model": "deepseek-ai/deepseek-v4-pro",
+      "enable_thinking": false,
+    },
+    "dock": "right",
+    "sidebar_side": "right",
+    "button": true,
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "ui_font_weight": 500.0,
+  "text_rendering_mode": "platform_default",
+  "minimum_contrast_for_highlights": 88.0,
+  "selection_highlight": false,
+  "rounded_selection": false,
+  "current_line_highlight": "all",
+  "unnecessary_code_fade": 0.7,
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "ui_font_family": "mononoki",
+  "buffer_font_weight": 550.0,
+  "buffer_line_height": {
+    "custom": 1.8,
+  },
+  "buffer_font_family": "mononoki",
+  "minimap": {
+    "thumb_border": "none",
+  },
+  "scrollbar": {
+    "show": "never",
+  },
+  "mouse_wheel_zoom": true,
+  "terminal": {
+    "scrollbar": {
+      "show": "never",
+    },
+  },
+  "title_bar": {
+    "button_layout": "platform_default",
+    "show_menus": false,
+    "show_user_picture": false,
+    "show_user_menu": true,
+    "show_sign_in": false,
+    "show_onboarding_banner": true,
+    "show_project_items": true,
+    "show_branch_name": true,
+  },
+  "show_whitespaces": "none",
+  "toolbar": {
+    "agent_review": false,
+    "selections_menu": false,
+    "quick_actions": false,
+    "breadcrumbs": false,
+  },
+  "tab_bar": {
+    "show_tab_bar_buttons": true,
+    "show_nav_history_buttons": true,
+    "show": false,
+  },
+  "ui_font_size": 19.0,
+  "buffer_font_size": 18.0,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Omazed",
+  },
+
+  "experimental.theme_overrides": {
+    "background.appearance": "blurred",
+
+    "background": "#0204099d",
+    "status_bar.background": "#020409b0",
+    "title_bar.background": "#020409b0",
+    "elevated_surface.background": "#121419ee",
+    "surface.background": "#3a393600",
+    "editor.background": "#00000055",
+    "editor.gutter.background": "#0c090680",
+    "editor.line_number": "#a9a293a0",
+    "editor.active_line_number": "#fff7e5",
+    "editor.active_line.background": "#fff7e520",
+    "editor.indent_guide": "#5d5951d9",
+    "editor.indent_guide_active": "#ffffffff",
+
+    "border": "#73799460",
+    "border.variant": "#73799420",
+    "hint.background": "#414559cc",
+
+    "tab_bar.background": "#00000000",
+    "tab.active_background": "#8caaee20",
+    "tab.inactive_background": "#00000000",
+    "element.selected": "#8caaee20",
+
+    "panel.background": "#02040960",
+    "panel.indent_guide": "#fff7e582",
+    "panel.indent_guide_hover": "#fff7e596",
+    "panel.indent_guide_active": "#fff7e5aa",
+    "panel.focused_border": "#00000000",
+
+    "toolbar.background": "#00000000",
+    "terminal.background": "#00000000",
+    "scrollbar.track.background": "#00000000",
+    "scrollbar.track.border": "#00000000",
+    "scrollbar.thumb.background": "#8caaee20",
+
+    "ghost_element.background": "#8caaee05",
+    "ghost_element.hover": "#8caaee10",
+    "ghost_element.active": "#8caaee15",
+    "ghost_element.selected": "#8caaee20",
+    "drop_target.background": "#8caaee20",
+    "element.hover": "#8caaee10",
+    "editor.highlighted_line.background": "#5d5951d9",
+  },
+}
