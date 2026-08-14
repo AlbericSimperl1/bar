@@ -86,7 +86,7 @@ Item {
                 text: "Bluetooth"
                 color: bluetoothPanelRoot.fgColor
                 font.family: bluetoothPanelRoot.fontFamily
-                font.pixelSize: 24
+                font.pixelSize: 19
                 font.bold: true
                 Layout.fillWidth: true
             }
@@ -96,7 +96,7 @@ Item {
                 text: "Scan"
                 color: scanMouseArea.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.accentColor
                 font.family: bluetoothPanelRoot.fontFamily
-                font.pixelSize: 18
+                font.pixelSize: 14
                 MouseArea {
                     id: scanMouseArea
                     anchors.fill: parent
@@ -130,7 +130,7 @@ Item {
                         text: "Connected devices"
                         color: bluetoothPanelRoot.dimColor
                         font.family: bluetoothPanelRoot.fontFamily
-                        font.pixelSize: 16
+                        font.pixelSize: 13
                         font.capitalization: Font.AllUppercase
                         Layout.fillWidth: true
                     }
@@ -153,14 +153,14 @@ Item {
                                     text: modelData.icon || ""
                                     color: bluetoothPanelRoot.accentColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 22
+                                    font.pixelSize: 18
                                 }
 
                                 Text {
                                     text: modelData.name || "Undiscovered device"
                                     color: bluetoothPanelRoot.fgColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 18
+                                    font.pixelSize: 14
                                     Layout.fillWidth: true
                                 }
 
@@ -168,7 +168,7 @@ Item {
                                     text: "Disconnect"
                                     color: disconnectMa.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.dimColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 17
+                                    font.pixelSize: 13
                                     MouseArea {
                                         id: disconnectMa
                                         anchors.fill: parent
@@ -199,7 +199,7 @@ Item {
                         text: "Paired devices"
                         color: bluetoothPanelRoot.dimColor
                         font.family: bluetoothPanelRoot.fontFamily
-                        font.pixelSize: 15
+                        font.pixelSize: 13
                         font.capitalization: Font.AllUppercase
                         Layout.fillWidth: true
                     }
@@ -222,14 +222,14 @@ Item {
                                     text: modelData.icon || ""
                                     color: bluetoothPanelRoot.fgColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 22
+                                    font.pixelSize: 18
                                 }
 
                                 Text {
                                     text: modelData.name || "Undiscovered device"
                                     color: bluetoothPanelRoot.fgColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 18
+                                    font.pixelSize: 14
                                     Layout.fillWidth: true
                                 }
 
@@ -237,7 +237,7 @@ Item {
                                     text: "Unpair"
                                     color: unpairMa.containsMouse ? "#ff5555" : bluetoothPanelRoot.dimColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 17
+                                    font.pixelSize: 13
                                     MouseArea {
                                         id: unpairMa
                                         anchors.fill: parent
@@ -251,7 +251,7 @@ Item {
                                     text: "Connect"
                                     color: connectMa.containsMouse ? bluetoothPanelRoot.fgColor : bluetoothPanelRoot.accentColor
                                     font.family: bluetoothPanelRoot.fontFamily
-                                    font.pixelSize: 17
+                                    font.pixelSize: 13
                                     MouseArea {
                                         id: connectMa
                                         anchors.fill: parent
@@ -280,7 +280,7 @@ Item {
                     text: "No devices found"
                     color: bluetoothPanelRoot.dimColor
                     font.family: bluetoothPanelRoot.fontFamily
-                    font.pixelSize: 18
+                    font.pixelSize: 25
                     horizontalAlignment: Text.AlignHCenter
                 }
             }

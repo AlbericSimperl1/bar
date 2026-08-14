@@ -14,7 +14,7 @@ ShellRoot {
     id: root
 
     // ---- Kleuren & Instellingen ----
-    readonly property color barBg: '#30202227'
+    readonly property color barBg: '#50000207'
     readonly property color fg: '#fff7e5'
     readonly property color accent: '#ebd9b9'
     readonly property color borderCol: "#2cffffff"
@@ -25,7 +25,7 @@ ShellRoot {
     readonly property int barRadius: 8      // Radius voor de bar zelf
 
     readonly property int panelMaxWidth: 480
-    readonly property int panelMaxHeight: 820
+    readonly property int panelMaxHeight: 420
     readonly property int panelMinHeight: 140
     readonly property int panelGap: 8
     readonly property int panelRadius: 12   // Radius voor de popup panels
@@ -77,11 +77,11 @@ ShellRoot {
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             color: "transparent"
 
-            margins.top: 5
-            margins.bottom: 5
-            margins.left: 4
+            margins.top: 3
+            margins.bottom: 3
+            margins.left: 2
 
-            exclusiveZone: root.sidebarWidth + 6
+            exclusiveZone: root.sidebarWidth + 4
 
             implicitWidth: root.sidebarWidth + root.panelGap + root.panelMaxWidth
 
