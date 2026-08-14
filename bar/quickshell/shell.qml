@@ -22,13 +22,13 @@ ShellRoot {
 
     readonly property int sidebarWidth: 28
     readonly property int marginSize: 0
-    readonly property int cornerRadius: 6
+    readonly property int barRadius: 8      // Radius voor de bar zelf
 
     readonly property int panelMaxWidth: 480
     readonly property int panelMaxHeight: 820
     readonly property int panelMinHeight: 140
     readonly property int panelGap: 8
-    readonly property int panelRadius: 12
+    readonly property int panelRadius: 12   // Radius voor de popup panels
 
     // MPRIS Active Player
     readonly property var activePlayer: {
@@ -53,39 +53,24 @@ ShellRoot {
             property bool popoutOpen: false
             property string activePanel: "none" // "media", "bluetooth" of "none"
             property bool hovered: false
-            property real openP: popoutOpen ? 1 : 0
-            Behavior on openP {
-                NumberAnimation {
-                    duration: 130
-                    easing.type: Easing.OutCubic
-                }
-            }
+
+            // Direct open of dicht (geen animatie)
+            readonly property real openP: popoutOpen ? 1 : 0
 
             property real panelTopY: 120
 
-            // Hoogte volgt automatisch de inhoud van het actieve paneel,
-            // begrensd tussen een minimum en het absolute maximum.
             readonly property real contentNeededHeight: activePanel === "media" ? mediaPanel.implicitHeight : activePanel === "bluetooth" ? bluetoothPanel.neededHeight : 0
 
-            property real panelH: Math.min(root.panelMaxHeight, Math.max(root.panelMinHeight, contentNeededHeight + 16))
-            Behavior on panelH {
-                NumberAnimation {
-                    duration: 160
-                    easing.type: Easing.OutCubic
-                }
-            }
+            // Hoogte van het paneel (geen animatie op panelH)
+            readonly property real panelH: Math.min(root.panelMaxHeight, Math.max(root.panelMinHeight, contentNeededHeight + 16))
 
-            // Herclamp de positie als de hoogte na openen nog verandert
-            // (bv. bluetooth-devices die asynchroon binnenkomen)
             onPanelHChanged: {
                 if (popoutOpen) {
-                    const inset = root.cornerRadius + root.panelRadius + 2;
+                    const inset = root.barRadius + root.panelRadius + 2;
                     const maxTop = sidebarBg.height - inset - panelH;
                     panelTopY = Math.max(inset, Math.min(panelTopY, maxTop));
                 }
             }
-
-            readonly property real morphW: root.panelMaxWidth * openP
 
             screen: modelData
             WlrLayershell.layer: WlrLayer.Top
@@ -96,7 +81,6 @@ ShellRoot {
             margins.bottom: 5
             margins.left: 4
 
-            // Vaste exclusiveZone: enkel de balkbreedte wordt gereserveerd
             exclusiveZone: root.sidebarWidth + 6
 
             implicitWidth: root.sidebarWidth + root.panelGap + root.panelMaxWidth
@@ -107,17 +91,22 @@ ShellRoot {
                 left: true
             }
 
+            // Strakke, niet-geanimeerde maskers voor muisklikken
             mask: Region {
-                x: 0
-                y: 0
-                width: root.sidebarWidth
-                height: sidebarBg.height
-
+                // Bar gebied
                 Region {
-                    x: root.sidebarWidth + root.panelGap
-                    y: sidebarPanel.panelTopY
-                    width: Math.max(0, sidebarPanel.morphW - root.panelGap)
-                    height: sidebarPanel.panelH
+                    x: 0
+                    y: 0
+                    width: root.sidebarWidth
+                    height: sidebarBg.height
+                }
+
+                // Panel gebied (alleen als hij open is)
+                Region {
+                    x: sidebarPanel.popoutOpen ? (root.sidebarWidth + root.panelGap) : 0
+                    y: sidebarPanel.popoutOpen ? sidebarPanel.panelTopY : 0
+                    width: sidebarPanel.popoutOpen ? root.panelMaxWidth : 0
+                    height: sidebarPanel.popoutOpen ? sidebarPanel.panelH : 0
                 }
             }
 
@@ -139,7 +128,6 @@ ShellRoot {
                     closeTimer.start();
             }
 
-            // Generieke toggle-functie voor alle panelen
             function togglePanel(type, clickY) {
                 if (popoutOpen && activePanel === type) {
                     popoutOpen = false;
@@ -147,10 +135,9 @@ ShellRoot {
                     return;
                 }
 
-                // Eerst het actieve paneel wisselen zodat panelH herberekend wordt
                 activePanel = type;
 
-                const inset = root.cornerRadius + root.panelRadius + 2;
+                const inset = root.barRadius + root.panelRadius + 2;
                 const maxTop = sidebarBg.height - inset - panelH;
                 panelTopY = Math.max(inset, Math.min(clickY - panelH / 2, maxTop));
                 popoutOpen = true;
@@ -170,19 +157,16 @@ ShellRoot {
                     width: root.sidebarWidth + root.panelGap + root.panelMaxWidth + 4
                     height: parent.height
 
-                    // 1. De Vorm / Achtergrond
-                    MorphShape {
-                        id: morphShape
-                        sidebarWidth: root.sidebarWidth
-                        cornerRadius: root.cornerRadius
-                        panelGap: root.panelGap
-                        panelRadius: root.panelRadius
-                        morphW: sidebarPanel.morphW
-                        openFrac: sidebarPanel.openP
-                        panelTopY: sidebarPanel.panelTopY
-                        panelH: sidebarPanel.panelH
-                        barBg: root.barBg
-                        borderCol: root.borderCol
+                    // 1. Normale Rectangle voor de Bar zelf
+                    Rectangle {
+                        x: 0
+                        y: 0
+                        width: root.sidebarWidth
+                        height: parent.height
+                        color: root.barBg
+                        radius: root.barRadius
+                        border.color: root.borderCol
+                        border.width: 1
                     }
 
                     // 2. Inhoud van de Balk
@@ -197,54 +181,61 @@ ShellRoot {
                         onBluetoothClicked: sidebarPanel.togglePanel("bluetooth", clickY)
                     }
 
-                    // 3. Uitgeklapt Inhoudspaneel (losstaande popout)
-                    Item {
-                        x: root.sidebarWidth + root.panelGap + 8
-                        y: sidebarPanel.panelTopY + 8
-                        width: root.panelMaxWidth - 16
-                        height: sidebarPanel.panelH - 16
+                    // 3. Normale Rectangle voor het uitgeklapte Paneel
+                    Rectangle {
+                        x: root.sidebarWidth + root.panelGap
+                        y: sidebarPanel.panelTopY
+                        width: root.panelMaxWidth
+                        height: sidebarPanel.panelH
+                        color: root.barBg
+                        radius: root.panelRadius
+                        border.color: root.borderCol
+                        border.width: 1
+                        visible: sidebarPanel.popoutOpen
 
-                        readonly property real contentP: Math.max(0, Math.min(1, (sidebarPanel.openP - 0.5) * 2))
-
-                        visible: contentP > 0
-                        opacity: contentP
-
-                        // Mediapaneel
-                        MediaPanel {
-                            id: mediaPanel
+                        Item {
                             anchors.fill: parent
-                            visible: sidebarPanel.activePanel === "media"
-                            player: root.activePlayer
-                            fgColor: root.fg
-                            accentColor: root.accent
-                            fontFamily: root.fontFamily
-                        }
+                            anchors.margins: 8
 
-                        // Bluetoothpaneel
-                        BluetoothPanel {
-                            id: bluetoothPanel
-                            anchors.fill: parent
-                            visible: sidebarPanel.activePanel === "bluetooth"
-                            fgColor: root.fg
-                            accentColor: root.accent
-                            fontFamily: root.fontFamily
+                            // Mediapaneel
+                            MediaPanel {
+                                id: mediaPanel
+                                anchors.fill: parent
+                                visible: sidebarPanel.activePanel === "media"
+                                player: root.activePlayer
+                                fgColor: root.fg
+                                accentColor: root.accent
+                                fontFamily: root.fontFamily
+                            }
+
+                            // Bluetoothpaneel
+                            BluetoothPanel {
+                                id: bluetoothPanel
+                                anchors.fill: parent
+                                visible: sidebarPanel.activePanel === "bluetooth"
+                                fgColor: root.fg
+                                accentColor: root.accent
+                                fontFamily: root.fontFamily
+                            }
                         }
                     }
                 }
             }
 
-            // BLUR-REGIO: balk + losstaand paneel, geen verbindingsstuk meer
+            // Blur over de bar en eventueel geopende panel
             BackgroundEffect.blurRegion: Region {
-                x: 0
-                y: 0
-                width: root.sidebarWidth
-                height: sidebarBg.height
+                Region {
+                    x: 0
+                    y: 0
+                    width: root.sidebarWidth
+                    height: sidebarBg.height
+                }
 
                 Region {
-                    x: root.sidebarWidth + root.panelGap
-                    y: sidebarPanel.panelTopY
-                    width: Math.max(0, sidebarPanel.morphW - root.panelGap)
-                    height: sidebarPanel.panelH
+                    x: sidebarPanel.popoutOpen ? (root.sidebarWidth + root.panelGap) : 0
+                    y: sidebarPanel.popoutOpen ? sidebarPanel.panelTopY : 0
+                    width: sidebarPanel.popoutOpen ? root.panelMaxWidth : 0
+                    height: sidebarPanel.popoutOpen ? sidebarPanel.panelH : 0
                 }
             }
         }
