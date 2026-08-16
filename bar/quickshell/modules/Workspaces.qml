@@ -9,7 +9,7 @@ ColumnLayout {
     spacing: 4
     Layout.alignment: Qt.AlignHCenter
 
-    property int persistentCount: 5
+    property int persistentCount: 7
 
     Repeater {
         model: persistentCount
@@ -30,7 +30,7 @@ ColumnLayout {
 
             property bool hovered: false
 
-            property real targetHeight: isActive ? 90 : (hasWindows ? 60 : 30)
+            property real targetHeight: isActive ? 75 : (hasWindows ? 50 : 25)
 
             Behavior on targetHeight {
                 NumberAnimation {
