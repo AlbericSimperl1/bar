@@ -11,7 +11,7 @@ QtObject {
     readonly property bool radioOn: ssid !== "WiFi-OFF"
     readonly property bool connected: radioOn && ssid !== "Disconnected"
 
-    property bool liveMode: false
+    property bool liveMode: true
     function toggleLiveMode() {
         liveMode = !liveMode;
     }
@@ -34,7 +34,7 @@ QtObject {
     }
 
     function scriptPath(name) {
-        return Quickshell.env("HOME") + "/.config/quickshell/scripts/" + name;
+        return Quickshell.env("HOME") + "/desktop/bar/quickshell/scripts/" + name;
     }
 
     function connectTo(ssidName) {
