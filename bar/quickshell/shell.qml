@@ -13,7 +13,7 @@ import "./modules/services"
 ShellRoot {
     id: root
 
-    readonly property color barBg: '#50100207'
+    readonly property color barBg: '#50000207'
     readonly property color fg: '#fff7e5'
     readonly property color accent: '#ebd9b9'
     readonly property color borderCol: "#2cffffff"
