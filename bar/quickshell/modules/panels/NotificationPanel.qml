@@ -5,73 +5,69 @@ import QtQuick.Controls
 import "../services"
 
 Item {
-    id: rootPanel
+    id: notificationPanelRoot
 
     property color fgColor: "#fff7e5"
     property color accentColor: "#ebd9b9"
+    property color dimColor: "#66fff7e5"
+    property color lineColor: "#20ffffff"
     property string fontFamily: "Mononoki Nerd Font Mono"
 
-    readonly property real neededHeight: Math.min(380, mainCol.implicitHeight + 16)
-
-    implicitWidth: parent ? parent.width : 300
-    implicitHeight: neededHeight
+    readonly property real neededHeight: Math.min(420, Math.max(140, (layoutRoot.anchors.margins * 2) + headerRow.implicitHeight + layoutRoot.spacing + mainColumn.implicitHeight))
 
     ColumnLayout {
-        id: mainCol
+        id: layoutRoot
         anchors.fill: parent
-        spacing: 10
+        anchors.margins: 16
+        spacing: 16
 
         // Header
         RowLayout {
+            id: headerRow
             Layout.fillWidth: true
-            spacing: 8
+            spacing: 10
 
-            Rectangle {
-                implicitWidth: 28
-                implicitHeight: 28
-                radius: 6
-                color: Notifications.dndEnabled ? rootPanel.accentColor : "#20ffffff"
+            Text {
+                text: "Notificaties"
+                color: notificationPanelRoot.fgColor
+                font.family: notificationPanelRoot.fontFamily
+                font.pixelSize: 19
+                font.bold: true
+                Layout.fillWidth: true
+            }
 
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰂛"
-                    color: Notifications.dndEnabled ? "#000000" : rootPanel.fgColor
-                    font.pixelSize: 14
-                }
+            Text {
+                text: Notifications.dndEnabled ? "󰂛 DND Aan" : "󰂚 DND Uit"
+                color: dndMa.containsMouse ? notificationPanelRoot.fgColor : (Notifications.dndEnabled ? notificationPanelRoot.accentColor : notificationPanelRoot.dimColor)
+                font.family: notificationPanelRoot.fontFamily
+                font.pixelSize: 13
 
                 MouseArea {
+                    id: dndMa
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
                     onClicked: Notifications.toggleDnd()
                 }
             }
 
             Text {
-                text: "Notificaties"
-                color: rootPanel.fgColor
-                font.family: rootPanel.fontFamily
-                font.pixelSize: 14
-                font.bold: true
-                Layout.fillWidth: true
+                text: "•"
+                color: notificationPanelRoot.dimColor
+                font.pixelSize: 11
             }
 
-            Rectangle {
-                implicitWidth: 70
-                implicitHeight: 26
-                radius: 6
-                color: "#20ffffff"
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "Wis alles"
-                    color: rootPanel.fgColor
-                    font.family: rootPanel.fontFamily
-                    font.pixelSize: 11
-                }
+            Text {
+                text: "Wis alles"
+                color: clearMa.containsMouse ? "#ff5555" : notificationPanelRoot.dimColor
+                font.family: notificationPanelRoot.fontFamily
+                font.pixelSize: 13
 
                 MouseArea {
+                    id: clearMa
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
                     onClicked: Notifications.clearAll()
                 }
             }
@@ -91,75 +87,136 @@ Item {
             Text {
                 id: dndText
                 text: "Niet storen is ingeschakeld"
-                color: rootPanel.accentColor
-                font.family: rootPanel.fontFamily
+                color: notificationPanelRoot.accentColor
+                font.family: notificationPanelRoot.fontFamily
                 font.pixelSize: 11
                 width: parent.width
             }
         }
 
-        // Notificaties Lijst
-        ScrollView {
+        // Scrollbaar gebied
+        Flickable {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
+            contentHeight: mainColumn.implicitHeight
+            interactive: true
 
             ColumnLayout {
+                id: mainColumn
                 width: parent.width
-                spacing: 6
+                spacing: 12
 
                 Repeater {
                     model: Notifications.list
 
-                    delegate: Rectangle {
+                    delegate: ColumnLayout {
                         required property string title
                         required property string body
                         required property string hash
+
+                        // Optionele velden (als de service deze meestuurt)
+                        property string icon: ""
+                        property string timeAgo: ""
+
                         readonly property bool isEmpty: hash === ""
 
                         Layout.fillWidth: true
-                        implicitHeight: cardCol.implicitHeight + 12
-                        radius: 8
-                        color: isEmpty ? "transparent" : "#20ffffff"
-                        border.width: isEmpty ? 0 : 1
-                        border.color: "#1affffff"
+                        spacing: 0
+                        visible: !isEmpty
 
-                        ColumnLayout {
-                            id: cardCol
-                            anchors.fill: parent
-                            anchors.margins: 6
-                            spacing: 4
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Layout.topMargin: 6
+                            Layout.bottomMargin: 12
+                            spacing: 10
 
+                            // App Icoon
                             Text {
-                                text: title
-                                color: rootPanel.fgColor
-                                font.family: rootPanel.fontFamily
-                                font.pixelSize: 12
-                                font.bold: true
-                                Layout.fillWidth: true
-                                elide: Text.ElideRight
+                                text: icon !== "" ? icon : "󰂚"
+                                color: notificationPanelRoot.accentColor
+                                font.family: notificationPanelRoot.fontFamily
+                                font.pixelSize: 18
                             }
 
-                            Text {
-                                visible: body !== ""
-                                text: body
-                                color: rootPanel.fgColor
-                                opacity: 0.7
-                                font.family: rootPanel.fontFamily
-                                font.pixelSize: 11
-                                wrapMode: Text.Wrap
+                            // Bericht inhoud
+                            ColumnLayout {
                                 Layout.fillWidth: true
+                                spacing: 2
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 6
+
+                                    Text {
+                                        text: title
+                                        color: notificationPanelRoot.fgColor
+                                        font.family: notificationPanelRoot.fontFamily
+                                        font.pixelSize: 14
+                                        font.bold: true
+                                        Layout.fillWidth: true
+                                        elide: Text.ElideRight
+                                    }
+
+                                    Text {
+                                        visible: timeAgo !== ""
+                                        text: timeAgo
+                                        color: notificationPanelRoot.dimColor
+                                        font.family: notificationPanelRoot.fontFamily
+                                        font.pixelSize: 11
+                                    }
+                                }
+
+                                Text {
+                                    visible: body !== ""
+                                    text: body
+                                    color: notificationPanelRoot.dimColor
+                                    font.family: notificationPanelRoot.fontFamily
+                                    font.pixelSize: 12
+                                    wrapMode: Text.Wrap
+                                    Layout.fillWidth: true
+                                }
+                            }
+
+                            // Sluit knop
+                            Text {
+                                text: "✕"
+                                color: closeMa.containsMouse ? "#ff5555" : notificationPanelRoot.dimColor
+                                font.family: notificationPanelRoot.fontFamily
+                                font.pixelSize: 13
+
+                                MouseArea {
+                                    id: closeMa
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        if (!isEmpty)
+                                            Notifications.close(hash);
+                                    }
+                                }
                             }
                         }
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                if (!isEmpty)
-                                    Notifications.close(hash);
-                            }
+                        // Trace lijn onder elk item
+                        Rectangle {
+                            Layout.fillWidth: true
+                            height: 1
+                            color: notificationPanelRoot.lineColor
                         }
                     }
+                }
+
+                // Lege staat
+                Text {
+                    visible: Notifications.list.length === 0
+                    Layout.fillWidth: true
+                    Layout.topMargin: 40
+                    text: "Geen notificaties"
+                    color: notificationPanelRoot.dimColor
+                    font.family: notificationPanelRoot.fontFamily
+                    font.pixelSize: 22
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }

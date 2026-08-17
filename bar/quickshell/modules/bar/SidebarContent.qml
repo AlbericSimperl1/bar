@@ -19,7 +19,8 @@ Item {
 
     signal mediaClicked(real clickY)
     signal bluetoothClicked(real clickY)
-    signal notificationsClicked(real clickY) // <-- Met Y-positie
+    signal wifiClicked(real clickY)
+    signal notificationsClicked(real clickY)
 
     width: 28
     implicitWidth: barRoot.width
@@ -45,7 +46,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
-        spacing: 15
+        spacing: 12
 
         Item {
             id: mediaWidget
@@ -107,7 +108,7 @@ Item {
             text: ""
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 23
+            font.pixelSize: 20
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
@@ -121,11 +122,29 @@ Item {
         }
 
         Text {
+            id: wifiWidget
+            text: "󰤨"
+            color: barRoot.fgColor
+            font.family: barRoot.fontFamily
+            font.pixelSize: 19
+            Layout.alignment: Qt.AlignHCenter
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                    let mapped = wifiWidget.mapToItem(barRoot.parent, 0, 0);
+                    barRoot.wifiClicked(mapped.y + wifiWidget.height / 2);
+                }
+            }
+        }
+
+        Text {
             id: notificationsWidget
             text: "󰂚"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 21
+            font.pixelSize: 19
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
@@ -142,7 +161,7 @@ Item {
             text: "⏻"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 23
+            font.pixelSize: 20
             Layout.alignment: Qt.AlignHCenter
             MouseArea {
                 anchors.fill: parent

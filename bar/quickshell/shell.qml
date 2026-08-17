@@ -43,6 +43,10 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
 
+        OSD {
+            screen: modelData
+        }
+
         NotificationToast {
             screen: modelData
         }
@@ -59,8 +63,8 @@ ShellRoot {
             readonly property real openP: popoutOpen ? 1 : 0
             property real panelTopY: 120
 
-            // Hoogteberekening uitgebreid met notificaties
-            readonly property real contentNeededHeight: activePanel === "media" ? mediaPanel.implicitHeight : activePanel === "bluetooth" ? bluetoothPanel.neededHeight : activePanel === "notifications" ? notificationPanel.neededHeight : 0
+            // Hoogteberekening uitgebreid met wifi
+            readonly property real contentNeededHeight: activePanel === "media" ? mediaPanel.implicitHeight : activePanel === "bluetooth" ? bluetoothPanel.neededHeight : activePanel === "notifications" ? notificationPanel.neededHeight : activePanel === "wifi" ? wifiPanel.neededHeight : 0
             readonly property real panelH: Math.min(root.panelMaxHeight, Math.max(root.panelMinHeight, contentNeededHeight + 16))
 
             onPanelHChanged: {
@@ -172,6 +176,7 @@ ShellRoot {
 
                         onMediaClicked: clickY => sidebarPanel.togglePanel("media", clickY)
                         onBluetoothClicked: clickY => sidebarPanel.togglePanel("bluetooth", clickY)
+                        onWifiClicked: clickY => sidebarPanel.togglePanel("wifi", clickY)
                         onNotificationsClicked: clickY => sidebarPanel.togglePanel("notifications", clickY)
                     }
 
@@ -204,6 +209,15 @@ ShellRoot {
                                 id: bluetoothPanel
                                 anchors.fill: parent
                                 visible: sidebarPanel.activePanel === "bluetooth"
+                                fgColor: root.fg
+                                accentColor: root.accent
+                                fontFamily: root.fontFamily
+                            }
+
+                            WifiPanel {
+                                id: wifiPanel
+                                anchors.fill: parent
+                                visible: sidebarPanel.activePanel === "wifi"
                                 fgColor: root.fg
                                 accentColor: root.accent
                                 fontFamily: root.fontFamily
