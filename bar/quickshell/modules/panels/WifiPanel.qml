@@ -51,12 +51,7 @@ Item {
     }
 
     readonly property int signalStrength: connectedWifiNetwork ? Math.round((connectedWifiNetwork.signalStrength || 0) * 100) : -1
-
     readonly property string icon: Model.connectionIcon(kind, signalStrength)
-
-    property int connectionPhraseIndex: 0
-    readonly property var connectionPhrases: ["Wiring bits", "Handling packets", "Sorting frames", "Hauling bytes", "Routing crumbs"]
-    readonly property string connectionPhrase: connectionPhrases[connectionPhraseIndex % connectionPhrases.length]
 
     // Functies
     function cancelPasswordPrompt() {
@@ -274,14 +269,6 @@ Item {
     }
 
     Timer {
-        id: connectionPhraseTimer
-        interval: 2800
-        running: wifiPanelRoot.kind !== "disconnected"
-        repeat: true
-        onTriggered: connectionPhraseIndex = (connectionPhraseIndex + 1) % connectionPhrases.length
-    }
-
-    Timer {
         id: actionTimeout
         interval: 30000
         repeat: false
@@ -296,6 +283,7 @@ Item {
         }
     }
 
+    // UI Layout
     ColumnLayout {
         id: layoutRoot
         anchors.fill: parent
@@ -309,7 +297,7 @@ Item {
             spacing: 10
 
             Text {
-                text: "Netwerk"
+                text: "Network"
                 color: wifiPanelRoot.fgColor
                 font.family: wifiPanelRoot.fontFamily
                 font.pixelSize: 19
@@ -317,12 +305,12 @@ Item {
                 Layout.fillWidth: true
             }
 
-            // Vernieuw knop
+            // Refresh button
             Text {
-                text: "󰑐"
-                color: refreshMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.dimColor
+                text: "Refresh"
+                color: refreshMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.accentColor
                 font.family: wifiPanelRoot.fontFamily
-                font.pixelSize: 16
+                font.pixelSize: 14
 
                 MouseArea {
                     id: refreshMa
@@ -333,12 +321,18 @@ Item {
                 }
             }
 
-            // Wifi In/Uitschakelen
             Text {
-                text: Networking.wifiEnabled ? "󰤨 Aan" : "󰤭 Uit"
+                text: "•"
+                color: wifiPanelRoot.dimColor
+                font.pixelSize: 11
+            }
+
+            // Toggle Wi-Fi
+            Text {
+                text: Networking.wifiEnabled ? "On" : "Off"
                 color: toggleMa.containsMouse ? wifiPanelRoot.fgColor : (Networking.wifiEnabled ? wifiPanelRoot.accentColor : wifiPanelRoot.dimColor)
                 font.family: wifiPanelRoot.fontFamily
-                font.pixelSize: 13
+                font.pixelSize: 14
 
                 MouseArea {
                     id: toggleMa
@@ -350,7 +344,7 @@ Item {
             }
         }
 
-        // Main content
+        // Scrollable area
         Flickable {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -361,125 +355,150 @@ Item {
             ColumnLayout {
                 id: mainColumn
                 width: parent.width
-                spacing: 16
+                spacing: 18
 
-                // Status kaartje actieve verbinding
-                Rectangle {
+                // --- SECTION 1: ACTIVE CONNECTION ---
+                ColumnLayout {
                     Layout.fillWidth: true
-                    implicitHeight: 50
-                    color: wifiPanelRoot.lineColor
-                    radius: 8
+                    spacing: 0
+                    visible: wifiPanelRoot.kind !== "disconnected"
+
+                    Text {
+                        text: "Active Connection"
+                        color: wifiPanelRoot.dimColor
+                        font.family: wifiPanelRoot.fontFamily
+                        font.pixelSize: 13
+                        font.capitalization: Font.AllUppercase
+                        Layout.fillWidth: true
+                        Layout.topMargin: 6
+                        Layout.bottomMargin: 12
+                    }
 
                     RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 12
+                        Layout.fillWidth: true
+                        Layout.bottomMargin: 12
+                        spacing: 10
 
                         Text {
                             text: wifiPanelRoot.icon
                             color: wifiPanelRoot.accentColor
                             font.family: wifiPanelRoot.fontFamily
-                            font.pixelSize: 22
+                            font.pixelSize: 18
                         }
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-
-                            Text {
-                                text: {
-                                    if (wifiPanelRoot.kind === "wifi")
-                                        return wifiPanelRoot.connectedWifiNetwork ? wifiPanelRoot.connectedWifiNetwork.name : "Wi-Fi";
-                                    if (wifiPanelRoot.kind === "ethernet")
-                                        return "Ethernet";
-                                    return "Niet verbonden";
-                                }
-                                color: wifiPanelRoot.fgColor
-                                font.family: wifiPanelRoot.fontFamily
-                                font.pixelSize: 14
-                                font.bold: true
-                                elide: Text.ElideRight
+                        Text {
+                            text: {
+                                if (wifiPanelRoot.kind === "wifi")
+                                    return wifiPanelRoot.connectedWifiNetwork ? wifiPanelRoot.connectedWifiNetwork.name : "Wi-Fi";
+                                if (wifiPanelRoot.kind === "ethernet")
+                                    return "Ethernet";
+                                return "Disconnected";
                             }
+                            color: wifiPanelRoot.fgColor
+                            font.family: wifiPanelRoot.fontFamily
+                            font.pixelSize: 14
+                            font.bold: true
+                            Layout.fillWidth: true
+                            elide: Text.ElideRight
+                        }
 
-                            Text {
-                                visible: wifiPanelRoot.kind !== "disconnected"
-                                text: wifiPanelRoot.connectionPhrase.toUpperCase()
-                                color: wifiPanelRoot.dimColor
-                                font.family: wifiPanelRoot.fontFamily
-                                font.pixelSize: 10
-                                font.bold: true
-                                font.letterSpacing: 1.1
+                        Text {
+                            text: "Disconnect"
+                            color: disconnectActMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.dimColor
+                            font.family: wifiPanelRoot.fontFamily
+                            font.pixelSize: 13
+
+                            MouseArea {
+                                id: disconnectActMa
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                hoverEnabled: true
+                                onClicked: {
+                                    if (wifiPanelRoot.kind === "wifi" && wifiPanelRoot.connectedWifiNetwork) {
+                                        wifiPanelRoot.disconnectRow(wifiPanelRoot.connectedWifiNetwork.name);
+                                    }
+                                }
                             }
                         }
                     }
+
+                    // Trace line
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 1
+                        color: wifiPanelRoot.lineColor
+                    }
                 }
 
-                // DNS Provider Selector
+                // --- SECTION 2: DNS PROVIDER ---
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 8
+                    spacing: 0
 
                     Text {
-                        text: "DNS PROVIDER"
+                        text: "DNS Provider"
                         color: wifiPanelRoot.dimColor
                         font.family: wifiPanelRoot.fontFamily
-                        font.pixelSize: 11
-                        font.bold: true
-                        font.letterSpacing: 1.2
+                        font.pixelSize: 13
+                        font.capitalization: Font.AllUppercase
+                        Layout.fillWidth: true
+                        Layout.topMargin: 6
+                        Layout.bottomMargin: 12
                     }
 
                     RowLayout {
                         Layout.fillWidth: true
-                        spacing: 6
+                        Layout.bottomMargin: 12
+                        spacing: 12
 
                         Repeater {
                             model: ["DHCP", "Cloudflare", "Google", "Custom"]
 
-                            delegate: Rectangle {
+                            delegate: Text {
                                 required property string modelData
-                                Layout.fillWidth: true
-                                implicitHeight: 28
-                                radius: 6
-                                color: wifiPanelRoot.dnsProvider === modelData ? wifiPanelRoot.accentColor : wifiPanelRoot.lineColor
-
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: parent.modelData
-                                    color: wifiPanelRoot.dnsProvider === parent.modelData ? "#11111b" : wifiPanelRoot.fgColor
-                                    font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 11
-                                    font.bold: wifiPanelRoot.dnsProvider === parent.modelData
-                                }
+                                text: modelData
+                                color: dnsMa.containsMouse ? wifiPanelRoot.fgColor : (wifiPanelRoot.dnsProvider === modelData ? wifiPanelRoot.accentColor : wifiPanelRoot.dimColor)
+                                font.family: wifiPanelRoot.fontFamily
+                                font.pixelSize: 13
+                                font.bold: wifiPanelRoot.dnsProvider === modelData
 
                                 MouseArea {
+                                    id: dnsMa
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
+                                    hoverEnabled: true
                                     onClicked: wifiPanelRoot.dnsProvider = parent.modelData
                                 }
                             }
                         }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+                    }
+
+                    // Trace line
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 1
+                        color: wifiPanelRoot.lineColor
                     }
                 }
 
-                // Scheidingslijn
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 1
-                    color: wifiPanelRoot.lineColor
-                }
-
-                // Netwerken lijst
+                // --- SECTION 3: WI-FI NETWORKS ---
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 10
+                    spacing: 0
 
                     Text {
-                        text: wifiPanelRoot.scanning ? "SCANNING WI-FI…" : "WI-FI NETWERKEN"
+                        text: wifiPanelRoot.scanning ? "Scanning..." : "Wi-Fi Networks"
                         color: wifiPanelRoot.dimColor
                         font.family: wifiPanelRoot.fontFamily
-                        font.pixelSize: 11
-                        font.bold: true
-                        font.letterSpacing: 1.2
+                        font.pixelSize: 13
+                        font.capitalization: Font.AllUppercase
+                        Layout.fillWidth: true
+                        Layout.topMargin: 6
+                        Layout.bottomMargin: 12
                     }
 
                     Repeater {
@@ -497,114 +516,129 @@ Item {
                             readonly property bool isPasswordOpen: wifiPanelRoot.passwordSsid !== "" && wifiPanelRoot.passwordSsid === (modelData ? modelData.ssid : "")
 
                             Layout.fillWidth: true
-                            spacing: 4
+                            spacing: 0
 
-                            // Sectie titel (Bekende / Overige)
+                            // Section title (Known / Others)
                             Text {
                                 visible: sectionTitle !== ""
                                 text: sectionTitle
                                 color: wifiPanelRoot.accentColor
                                 font.family: wifiPanelRoot.fontFamily
-                                font.pixelSize: 10
+                                font.pixelSize: 11
                                 font.bold: true
-                                Layout.topMargin: 6
-                            }
-
-                            // Netwerk Rij
-                            Rectangle {
+                                font.capitalization: Font.AllUppercase
                                 Layout.fillWidth: true
-                                implicitHeight: 36
-                                radius: 6
-                                color: rowMa.containsMouse ? wifiPanelRoot.lineColor : "transparent"
+                                Layout.topMargin: 6
+                                Layout.bottomMargin: 12
+                            }
 
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 8
-                                    anchors.rightMargin: 8
-                                    spacing: 10
+                            // Network Row
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Layout.topMargin: 6
+                                Layout.bottomMargin: 12
+                                spacing: 10
 
-                                    Text {
-                                        text: Model.wifiIconFor(modelData.signal)
-                                        color: isConnected ? wifiPanelRoot.accentColor : wifiPanelRoot.fgColor
-                                        font.family: wifiPanelRoot.fontFamily
-                                        font.pixelSize: 16
-                                    }
+                                Text {
+                                    text: Model.wifiIconFor(modelData.signal)
+                                    color: isConnected ? wifiPanelRoot.accentColor : wifiPanelRoot.fgColor
+                                    font.family: wifiPanelRoot.fontFamily
+                                    font.pixelSize: 18
+                                }
 
-                                    Text {
-                                        text: modelData.ssid || "Verborgen netwerk"
-                                        color: wifiPanelRoot.fgColor
-                                        font.family: wifiPanelRoot.fontFamily
-                                        font.pixelSize: 13
-                                        font.bold: isConnected
-                                        Layout.fillWidth: true
-                                        elide: Text.ElideRight
-                                    }
+                                Text {
+                                    text: modelData.ssid || "Hidden network"
+                                    color: wifiPanelRoot.fgColor
+                                    font.family: wifiPanelRoot.fontFamily
+                                    font.pixelSize: 14
+                                    font.bold: isConnected
+                                    Layout.fillWidth: true
+                                    elide: Text.ElideRight
+                                }
 
-                                    // Status tekst
-                                    Text {
-                                        visible: isConnected || (wifiPanelRoot.actionSsid === modelData.ssid)
-                                        text: isConnected ? "Verbonden" : (wifiPanelRoot.actionSsid === modelData.ssid ? "Bezig..." : "")
-                                        color: isConnected ? wifiPanelRoot.accentColor : wifiPanelRoot.dimColor
-                                        font.family: wifiPanelRoot.fontFamily
-                                        font.pixelSize: 11
-                                    }
+                                Text {
+                                    visible: wifiPanelRoot.actionSsid === modelData.ssid
+                                    text: "Connecting..."
+                                    color: wifiPanelRoot.dimColor
+                                    font.family: wifiPanelRoot.fontFamily
+                                    font.pixelSize: 13
+                                }
 
-                                    // Vergrendeld / Vergeten icoon
-                                    Text {
-                                        visible: requiresCredentials || (isKnown && !isConnected)
-                                        text: (isKnown && !isConnected) ? "󰅙" : "󰌾"
-                                        color: (isKnown && !isConnected && forgetMa.containsMouse) ? "#ff5555" : wifiPanelRoot.dimColor
-                                        font.family: wifiPanelRoot.fontFamily
-                                        font.pixelSize: 14
+                                Text {
+                                    visible: isConnected
+                                    text: "Disconnect"
+                                    color: disconnectRowMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.dimColor
+                                    font.family: wifiPanelRoot.fontFamily
+                                    font.pixelSize: 13
 
-                                        MouseArea {
-                                            id: forgetMa
-                                            anchors.fill: parent
-                                            enabled: isKnown && !isConnected
-                                            cursorShape: Qt.PointingHandCursor
-                                            hoverEnabled: true
-                                            onClicked: wifiPanelRoot.forget(modelData)
-                                        }
+                                    MouseArea {
+                                        id: disconnectRowMa
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+                                        onClicked: wifiPanelRoot.disconnectRow(modelData.ssid)
                                     }
                                 }
 
-                                MouseArea {
-                                    id: rowMa
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-                                    z: -1
-                                    onClicked: {
-                                        if (isConnected) {
-                                            wifiPanelRoot.disconnectRow(modelData.ssid);
-                                            return;
+                                Text {
+                                    visible: isKnown && !isConnected
+                                    text: "Forget"
+                                    color: forgetMa.containsMouse ? "#ff5555" : wifiPanelRoot.dimColor
+                                    font.family: wifiPanelRoot.fontFamily
+                                    font.pixelSize: 13
+
+                                    MouseArea {
+                                        id: forgetMa
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+                                        onClicked: wifiPanelRoot.forget(modelData)
+                                    }
+                                }
+
+                                Text {
+                                    visible: !isConnected && wifiPanelRoot.actionSsid !== modelData.ssid
+                                    text: "Connect"
+                                    color: connectMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.accentColor
+                                    font.family: wifiPanelRoot.fontFamily
+                                    font.pixelSize: 13
+
+                                    MouseArea {
+                                        id: connectMa
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+                                        onClicked: {
+                                            if (requiresCredentials && !isKnown) {
+                                                wifiPanelRoot.openPasswordPrompt(modelData.ssid);
+                                                return;
+                                            }
+                                            wifiPanelRoot.connectDirectly(modelData.ssid);
                                         }
-                                        if (requiresCredentials && !isKnown) {
-                                            wifiPanelRoot.openPasswordPrompt(modelData.ssid);
-                                            return;
-                                        }
-                                        wifiPanelRoot.connectDirectly(modelData.ssid);
                                     }
                                 }
                             }
 
-                            // Inklapbaar Wachtwoord Invoerveld
+                            // Collapsible Password Input
                             ColumnLayout {
                                 visible: isPasswordOpen
                                 Layout.fillWidth: true
-                                Layout.leftMargin: 8
+                                Layout.leftMargin: 28
                                 Layout.rightMargin: 8
-                                spacing: 6
+                                Layout.bottomMargin: 12
+                                spacing: 8
 
                                 TextField {
                                     visible: isEnterprise
                                     Layout.fillWidth: true
-                                    placeholderText: "Identiteit (gebruiker@domein)"
+                                    placeholderText: "Identity (user@domain)"
                                     color: wifiPanelRoot.fgColor
                                     font.family: wifiPanelRoot.fontFamily
                                     font.pixelSize: 12
                                     background: Rectangle {
-                                        color: wifiPanelRoot.lineColor
+                                        color: "transparent"
+                                        border.color: wifiPanelRoot.lineColor
+                                        border.width: 1
                                         radius: 4
                                     }
                                     onTextChanged: wifiPanelRoot.identityText = text
@@ -612,30 +646,32 @@ Item {
 
                                 RowLayout {
                                     Layout.fillWidth: true
-                                    spacing: 6
+                                    spacing: 10
 
                                     TextField {
                                         id: pwInput
                                         Layout.fillWidth: true
                                         echoMode: TextInput.Password
-                                        placeholderText: "Wachtwoord"
+                                        placeholderText: "Password"
                                         color: wifiPanelRoot.fgColor
                                         font.family: wifiPanelRoot.fontFamily
                                         font.pixelSize: 12
                                         background: Rectangle {
-                                            color: wifiPanelRoot.lineColor
+                                            color: "transparent"
+                                            border.color: wifiPanelRoot.lineColor
+                                            border.width: 1
                                             radius: 4
                                         }
                                         onTextChanged: wifiPanelRoot.passwordText = text
                                         onAccepted: submitBtn.click()
                                     }
 
-                                    Rectangle {
+                                    Text {
                                         id: submitBtn
-                                        implicitWidth: 32
-                                        implicitHeight: 32
-                                        radius: 4
-                                        color: wifiPanelRoot.accentColor
+                                        text: "Connect"
+                                        color: submitMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.accentColor
+                                        font.family: wifiPanelRoot.fontFamily
+                                        font.pixelSize: 13
 
                                         function click() {
                                             if (pwInput.text.length === 0)
@@ -647,23 +683,36 @@ Item {
                                             }
                                         }
 
-                                        Text {
-                                            anchors.centerIn: parent
-                                            text: "󰄬"
-                                            color: "#11111b"
-                                            font.family: wifiPanelRoot.fontFamily
-                                            font.pixelSize: 14
-                                        }
-
                                         MouseArea {
+                                            id: submitMa
                                             anchors.fill: parent
                                             cursorShape: Qt.PointingHandCursor
+                                            hoverEnabled: true
                                             onClicked: parent.click()
                                         }
                                     }
                                 }
                             }
+
+                            // Trace line
+                            Rectangle {
+                                Layout.fillWidth: true
+                                height: 1
+                                color: wifiPanelRoot.lineColor
+                            }
                         }
+                    }
+
+                    // Empty state
+                    Text {
+                        visible: !wifiPanelRoot.wifiStationAvailable || wifiPanelRoot.wifiNetworks.length === 0
+                        Layout.fillWidth: true
+                        Layout.topMargin: 40
+                        text: "No networks found"
+                        color: wifiPanelRoot.dimColor
+                        font.family: wifiPanelRoot.fontFamily
+                        font.pixelSize: 22
+                        horizontalAlignment: Text.AlignHCenter
                     }
                 }
             }

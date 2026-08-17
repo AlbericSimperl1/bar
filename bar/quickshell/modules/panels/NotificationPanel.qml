@@ -28,7 +28,7 @@ Item {
             spacing: 10
 
             Text {
-                text: "Notificaties"
+                text: "Notifications"
                 color: notificationPanelRoot.fgColor
                 font.family: notificationPanelRoot.fontFamily
                 font.pixelSize: 19
@@ -37,7 +37,7 @@ Item {
             }
 
             Text {
-                text: Notifications.dndEnabled ? "󰂛 DND Aan" : "󰂚 DND Uit"
+                text: Notifications.dndEnabled ? "󰂛 DND enabled" : "󰂚 DND disabled"
                 color: dndMa.containsMouse ? notificationPanelRoot.fgColor : (Notifications.dndEnabled ? notificationPanelRoot.accentColor : notificationPanelRoot.dimColor)
                 font.family: notificationPanelRoot.fontFamily
                 font.pixelSize: 13
@@ -58,7 +58,7 @@ Item {
             }
 
             Text {
-                text: "Wis alles"
+                text: "Clear all"
                 color: clearMa.containsMouse ? "#ff5555" : notificationPanelRoot.dimColor
                 font.family: notificationPanelRoot.fontFamily
                 font.pixelSize: 13
@@ -86,7 +86,7 @@ Item {
 
             Text {
                 id: dndText
-                text: "Niet storen is ingeschakeld"
+                text: "DND is active"
                 color: notificationPanelRoot.accentColor
                 font.family: notificationPanelRoot.fontFamily
                 font.pixelSize: 11
@@ -212,7 +212,7 @@ Item {
                     visible: Notifications.list.length === 0
                     Layout.fillWidth: true
                     Layout.topMargin: 40
-                    text: "Geen notificaties"
+                    text: "No notifications"
                     color: notificationPanelRoot.dimColor
                     font.family: notificationPanelRoot.fontFamily
                     font.pixelSize: 22
