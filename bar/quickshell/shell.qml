@@ -21,13 +21,13 @@ ShellRoot {
 
     readonly property int sidebarWidth: 28
     readonly property int marginSize: 0
-    readonly property int barRadius: 8
+    readonly property int barRadius: 0
 
     readonly property int panelMaxWidth: 480
     readonly property int panelMaxHeight: 420
     readonly property int panelMinHeight: 140
     readonly property int panelGap: 8
-    readonly property int panelRadius: 12
+    readonly property int panelRadius: 3
 
     readonly property var activePlayer: {
         const players = Mpris.players.values;
@@ -80,11 +80,11 @@ ShellRoot {
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             color: "transparent"
 
-            margins.top: 3
-            margins.bottom: 3
-            margins.left: 2
+            margins.top: 0
+            margins.bottom: 0
+            margins.left: 0
 
-            exclusiveZone: root.sidebarWidth + 4
+            exclusiveZone: root.sidebarWidth + 2
             implicitWidth: root.sidebarWidth + root.panelGap + root.panelMaxWidth
 
             anchors {
@@ -164,7 +164,7 @@ ShellRoot {
                         color: root.barBg
                         radius: root.barRadius
                         border.color: root.borderCol
-                        border.width: 1
+                        border.width: 0
                     }
 
                     SidebarContent {
