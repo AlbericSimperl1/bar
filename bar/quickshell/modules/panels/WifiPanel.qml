@@ -300,7 +300,7 @@ Item {
                 text: "Network"
                 color: wifiPanelRoot.fgColor
                 font.family: wifiPanelRoot.fontFamily
-                font.pixelSize: 19
+                font.pixelSize: 17
                 font.bold: true
                 Layout.fillWidth: true
             }
@@ -310,7 +310,7 @@ Item {
                 text: "Refresh"
                 color: refreshMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.accentColor
                 font.family: wifiPanelRoot.fontFamily
-                font.pixelSize: 14
+                font.pixelSize: 12
 
                 MouseArea {
                     id: refreshMa
@@ -324,7 +324,7 @@ Item {
             Text {
                 text: "•"
                 color: wifiPanelRoot.dimColor
-                font.pixelSize: 11
+                font.pixelSize: 9
             }
 
             // Toggle Wi-Fi
@@ -332,7 +332,7 @@ Item {
                 text: Networking.wifiEnabled ? "On" : "Off"
                 color: toggleMa.containsMouse ? wifiPanelRoot.fgColor : (Networking.wifiEnabled ? wifiPanelRoot.accentColor : wifiPanelRoot.dimColor)
                 font.family: wifiPanelRoot.fontFamily
-                font.pixelSize: 14
+                font.pixelSize: 12
 
                 MouseArea {
                     id: toggleMa
@@ -367,7 +367,7 @@ Item {
                         text: "Active Connection"
                         color: wifiPanelRoot.dimColor
                         font.family: wifiPanelRoot.fontFamily
-                        font.pixelSize: 13
+                        font.pixelSize: 11
                         font.capitalization: Font.AllUppercase
                         Layout.fillWidth: true
                         Layout.topMargin: 6
@@ -383,7 +383,7 @@ Item {
                             text: wifiPanelRoot.icon
                             color: wifiPanelRoot.accentColor
                             font.family: wifiPanelRoot.fontFamily
-                            font.pixelSize: 18
+                            font.pixelSize: 16
                         }
 
                         Text {
@@ -396,7 +396,7 @@ Item {
                             }
                             color: wifiPanelRoot.fgColor
                             font.family: wifiPanelRoot.fontFamily
-                            font.pixelSize: 14
+                            font.pixelSize: 12
                             font.bold: true
                             Layout.fillWidth: true
                             elide: Text.ElideRight
@@ -406,7 +406,7 @@ Item {
                             text: "Disconnect"
                             color: disconnectActMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.dimColor
                             font.family: wifiPanelRoot.fontFamily
-                            font.pixelSize: 13
+                            font.pixelSize: 11
 
                             MouseArea {
                                 id: disconnectActMa
@@ -439,7 +439,7 @@ Item {
                         text: "DNS Provider"
                         color: wifiPanelRoot.dimColor
                         font.family: wifiPanelRoot.fontFamily
-                        font.pixelSize: 13
+                        font.pixelSize: 11
                         font.capitalization: Font.AllUppercase
                         Layout.fillWidth: true
                         Layout.topMargin: 6
@@ -459,7 +459,7 @@ Item {
                                 text: modelData
                                 color: dnsMa.containsMouse ? wifiPanelRoot.fgColor : (wifiPanelRoot.dnsProvider === modelData ? wifiPanelRoot.accentColor : wifiPanelRoot.dimColor)
                                 font.family: wifiPanelRoot.fontFamily
-                                font.pixelSize: 13
+                                font.pixelSize: 11
                                 font.bold: wifiPanelRoot.dnsProvider === modelData
 
                                 MouseArea {
@@ -494,7 +494,7 @@ Item {
                         text: wifiPanelRoot.scanning ? "Scanning..." : "Wi-Fi Networks"
                         color: wifiPanelRoot.dimColor
                         font.family: wifiPanelRoot.fontFamily
-                        font.pixelSize: 13
+                        font.pixelSize: 11
                         font.capitalization: Font.AllUppercase
                         Layout.fillWidth: true
                         Layout.topMargin: 6
@@ -524,7 +524,7 @@ Item {
                                 text: sectionTitle
                                 color: wifiPanelRoot.accentColor
                                 font.family: wifiPanelRoot.fontFamily
-                                font.pixelSize: 11
+                                font.pixelSize: 9
                                 font.bold: true
                                 font.capitalization: Font.AllUppercase
                                 Layout.fillWidth: true
@@ -543,14 +543,14 @@ Item {
                                     text: Model.wifiIconFor(modelData.signal)
                                     color: isConnected ? wifiPanelRoot.accentColor : wifiPanelRoot.fgColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 18
+                                    font.pixelSize: 16
                                 }
 
                                 Text {
                                     text: modelData.ssid || "Hidden network"
                                     color: wifiPanelRoot.fgColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 14
+                                    font.pixelSize: 12
                                     font.bold: isConnected
                                     Layout.fillWidth: true
                                     elide: Text.ElideRight
@@ -561,7 +561,7 @@ Item {
                                     text: "Connecting..."
                                     color: wifiPanelRoot.dimColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                    font.pixelSize: 11
                                 }
 
                                 Text {
@@ -569,7 +569,7 @@ Item {
                                     text: "Disconnect"
                                     color: disconnectRowMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.dimColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                    font.pixelSize: 11
 
                                     MouseArea {
                                         id: disconnectRowMa
@@ -585,7 +585,7 @@ Item {
                                     text: "Forget"
                                     color: forgetMa.containsMouse ? "#ff5555" : wifiPanelRoot.dimColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                    font.pixelSize: 11
 
                                     MouseArea {
                                         id: forgetMa
@@ -601,7 +601,7 @@ Item {
                                     text: "Connect"
                                     color: connectMa.containsMouse ? wifiPanelRoot.fgColor : wifiPanelRoot.accentColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 13
+                                    font.pixelSize: 11
 
                                     MouseArea {
                                         id: connectMa
@@ -634,7 +634,7 @@ Item {
                                     placeholderText: "Identity (user@domain)"
                                     color: wifiPanelRoot.fgColor
                                     font.family: wifiPanelRoot.fontFamily
-                                    font.pixelSize: 12
+                                    font.pixelSize: 10
                                     background: Rectangle {
                                         color: "transparent"
                                         border.color: wifiPanelRoot.lineColor
@@ -655,7 +655,7 @@ Item {
                                         placeholderText: "Password"
                                         color: wifiPanelRoot.fgColor
                                         font.family: wifiPanelRoot.fontFamily
-                                        font.pixelSize: 12
+                                        font.pixelSize: 10
                                         background: Rectangle {
                                             color: "transparent"
                                             border.color: wifiPanelRoot.lineColor
@@ -711,7 +711,7 @@ Item {
                         text: "No networks found"
                         color: wifiPanelRoot.dimColor
                         font.family: wifiPanelRoot.fontFamily
-                        font.pixelSize: 22
+                        font.pixelSize: 20
                         horizontalAlignment: Text.AlignHCenter
                     }
                 }

@@ -17,14 +17,14 @@ ShellRoot {
     readonly property color fg: '#fff7e5'
     readonly property color accent: '#ebd9b9'
     readonly property color borderCol: "#2cffffff"
-    readonly property string fontFamily: "Mononoki Nerd Font Mono"
+    readonly property string fontFamily: "mononoki"
 
     readonly property int sidebarWidth: 28
     readonly property int marginSize: 0
     readonly property int barRadius: 0
 
-    readonly property int panelMaxWidth: 480
-    readonly property int panelMaxHeight: 420
+    readonly property int panelMaxWidth: 400
+    readonly property int panelMaxHeight: 410
     readonly property int panelMinHeight: 140
     readonly property int panelGap: 8
     readonly property int panelRadius: 3
@@ -43,10 +43,6 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
 
-        OSD {
-            screen: modelData
-        }
-
         NotificationToast {
             screen: modelData
         }
@@ -64,7 +60,7 @@ ShellRoot {
             property real panelTopY: 120
 
             // Hoogteberekening uitgebreid met wifi
-            readonly property real contentNeededHeight: activePanel === "media" ? mediaPanel.implicitHeight : activePanel === "bluetooth" ? bluetoothPanel.neededHeight : activePanel === "notifications" ? notificationPanel.neededHeight : activePanel === "wifi" ? wifiPanel.neededHeight : 0
+            readonly property real contentNeededHeight: activePanel === "media" ? mediaPanel.implicitHeight : activePanel === "bluetooth" ? bluetoothPanel.neededHeight : activePanel === "notifications" ? notificationPanel.neededHeight : activePanel === "wifi" ? wifiPanel.neededHeight : activePanel === "power" ? powerPanel.neededHeight : 0 // <- Toegevoegd
             readonly property real panelH: Math.min(root.panelMaxHeight, Math.max(root.panelMinHeight, contentNeededHeight + 16))
 
             onPanelHChanged: {
@@ -178,6 +174,7 @@ ShellRoot {
                         onBluetoothClicked: clickY => sidebarPanel.togglePanel("bluetooth", clickY)
                         onWifiClicked: clickY => sidebarPanel.togglePanel("wifi", clickY)
                         onNotificationsClicked: clickY => sidebarPanel.togglePanel("notifications", clickY)
+                        onPowerClicked: clickY => sidebarPanel.togglePanel("power", clickY)
                     }
 
                     Rectangle {
@@ -188,7 +185,7 @@ ShellRoot {
                         color: root.barBg
                         radius: root.panelRadius
                         border.color: root.borderCol
-                        border.width: 1
+                        border.width: 0
                         visible: sidebarPanel.popoutOpen
 
                         Item {
@@ -227,6 +224,16 @@ ShellRoot {
                                 id: notificationPanel
                                 anchors.fill: parent
                                 visible: sidebarPanel.activePanel === "notifications"
+                                fgColor: root.fg
+                                accentColor: root.accent
+                                fontFamily: root.fontFamily
+                            }
+
+                            // Nieuw PowerPanel invoegen:
+                            PowerPanel {
+                                id: powerPanel
+                                anchors.fill: parent
+                                visible: sidebarPanel.activePanel === "power"
                                 fgColor: root.fg
                                 accentColor: root.accent
                                 fontFamily: root.fontFamily

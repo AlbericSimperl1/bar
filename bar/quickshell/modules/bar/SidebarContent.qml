@@ -21,6 +21,7 @@ Item {
     signal bluetoothClicked(real clickY)
     signal wifiClicked(real clickY)
     signal notificationsClicked(real clickY)
+    signal powerClicked(real clickY)
 
     width: 28
     implicitWidth: barRoot.width
@@ -157,16 +158,34 @@ Item {
             }
         }
 
+        // Text {
+        //     text: "⏻"
+        //     color: barRoot.fgColor
+        //     font.family: barRoot.fontFamily
+        //     font.pixelSize: 20
+        //     Layout.alignment: Qt.AlignHCenter
+        //     MouseArea {
+        //         anchors.fill: parent
+        //         cursorShape: Qt.PointingHandCursor
+        //         onClicked: Quickshell.execDetached(["wlogout", "-b", "5"])
+        //     }
+        // }
+
         Text {
+            id: powerWidget // <- ID toevoegen
             text: "⏻"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
             font.pixelSize: 20
             Layout.alignment: Qt.AlignHCenter
+
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked: Quickshell.execDetached(["wlogout", "-b", "5"])
+                onClicked: {
+                    let mapped = powerWidget.mapToItem(barRoot.parent, 0, 0);
+                    barRoot.powerClicked(mapped.y + powerWidget.height / 2);
+                }
             }
         }
     }

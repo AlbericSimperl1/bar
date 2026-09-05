@@ -152,8 +152,8 @@ Item {
             // Album Art (met afgeronde hoeken via OpacityMask)
             Item {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 200
-                Layout.preferredHeight: 200
+                Layout.preferredWidth: 220
+                Layout.preferredHeight: 220
 
                 // 1. Bron-afbeelding (verborgen, dient als input)
                 Image {
@@ -206,7 +206,7 @@ Item {
                     text: root.trackTitle
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 20
+                    font.pixelSize: 16
                     font.bold: true
                     elide: Text.ElideRight
                     Layout.fillWidth: true
@@ -216,7 +216,7 @@ Item {
                     text: root.trackArtist
                     color: root.mutedColor
                     font.family: root.fontFamily
-                    font.pixelSize: 17
+                    font.pixelSize: 14
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -256,14 +256,14 @@ Item {
             // Knoppenbalk (Apple-style: grote, strakke iconen zonder achtergrond)
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: 40
+                spacing: 30
 
                 // Vorige nummer
                 Text {
                     text: "\uf048"
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 60
+                    font.pixelSize: 40
                     Layout.alignment: Qt.AlignVCenter
 
                     MouseArea {
@@ -279,7 +279,7 @@ Item {
                     text: root.isPlaying ? "\uf04c" : "\uf04b"
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 70
+                    font.pixelSize: 50
                     Layout.alignment: Qt.AlignVCenter
 
                     MouseArea {
@@ -295,7 +295,7 @@ Item {
                     text: "\uf051"
                     color: root.fgColor
                     font.family: root.fontFamily
-                    font.pixelSize: 60
+                    font.pixelSize: 40
                     Layout.alignment: Qt.AlignVCenter
 
                     MouseArea {

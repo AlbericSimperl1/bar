@@ -31,7 +31,7 @@ Item {
                 text: "Notifications"
                 color: notificationPanelRoot.fgColor
                 font.family: notificationPanelRoot.fontFamily
-                font.pixelSize: 19
+                font.pixelSize: 17
                 font.bold: true
                 Layout.fillWidth: true
             }
@@ -40,7 +40,7 @@ Item {
                 text: Notifications.dndEnabled ? "󰂛 DND enabled" : "󰂚 DND disabled"
                 color: dndMa.containsMouse ? notificationPanelRoot.fgColor : (Notifications.dndEnabled ? notificationPanelRoot.accentColor : notificationPanelRoot.dimColor)
                 font.family: notificationPanelRoot.fontFamily
-                font.pixelSize: 13
+                font.pixelSize: 11
 
                 MouseArea {
                     id: dndMa
@@ -54,14 +54,14 @@ Item {
             Text {
                 text: "•"
                 color: notificationPanelRoot.dimColor
-                font.pixelSize: 11
+                font.pixelSize: 10
             }
 
             Text {
                 text: "Clear all"
                 color: clearMa.containsMouse ? "#ff5555" : notificationPanelRoot.dimColor
                 font.family: notificationPanelRoot.fontFamily
-                font.pixelSize: 13
+                font.pixelSize: 11
 
                 MouseArea {
                     id: clearMa
@@ -89,7 +89,7 @@ Item {
                 text: "DND is active"
                 color: notificationPanelRoot.accentColor
                 font.family: notificationPanelRoot.fontFamily
-                font.pixelSize: 11
+                font.pixelSize: 9
                 width: parent.width
             }
         }
@@ -136,7 +136,7 @@ Item {
                                 text: icon !== "" ? icon : "󰂚"
                                 color: notificationPanelRoot.accentColor
                                 font.family: notificationPanelRoot.fontFamily
-                                font.pixelSize: 18
+                                font.pixelSize: 16
                             }
 
                             // Bericht inhoud
@@ -152,7 +152,7 @@ Item {
                                         text: title
                                         color: notificationPanelRoot.fgColor
                                         font.family: notificationPanelRoot.fontFamily
-                                        font.pixelSize: 14
+                                        font.pixelSize: 13
                                         font.bold: true
                                         Layout.fillWidth: true
                                         elide: Text.ElideRight
@@ -163,7 +163,7 @@ Item {
                                         text: timeAgo
                                         color: notificationPanelRoot.dimColor
                                         font.family: notificationPanelRoot.fontFamily
-                                        font.pixelSize: 11
+                                        font.pixelSize: 10
                                     }
                                 }
 
@@ -172,7 +172,7 @@ Item {
                                     text: body
                                     color: notificationPanelRoot.dimColor
                                     font.family: notificationPanelRoot.fontFamily
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                     wrapMode: Text.Wrap
                                     Layout.fillWidth: true
                                 }
@@ -183,7 +183,7 @@ Item {
                                 text: "✕"
                                 color: closeMa.containsMouse ? "#ff5555" : notificationPanelRoot.dimColor
                                 font.family: notificationPanelRoot.fontFamily
-                                font.pixelSize: 13
+                                font.pixelSize: 12
 
                                 MouseArea {
                                     id: closeMa
