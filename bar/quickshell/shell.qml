@@ -17,9 +17,9 @@ ShellRoot {
     readonly property color fg: '#fff7e5'
     readonly property color accent: '#ebd9b9'
     readonly property color borderCol: "#2cffffff"
-    readonly property string fontFamily: "mononoki"
+    readonly property string fontFamily: "Mononoki Nerd Font Mono"
 
-    readonly property int sidebarWidth: 28
+    readonly property int sidebarWidth: 17
     readonly property int marginSize: 0
     readonly property int barRadius: 0
 
@@ -76,8 +76,8 @@ ShellRoot {
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             color: "transparent"
 
-            margins.top: 0
-            margins.bottom: 0
+            margins.top: -8
+            margins.bottom: -8
             margins.left: 0
 
             exclusiveZone: root.sidebarWidth + 2

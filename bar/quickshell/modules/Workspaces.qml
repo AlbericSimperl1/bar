@@ -9,7 +9,7 @@ ColumnLayout {
     spacing: 4
     Layout.alignment: Qt.AlignHCenter
 
-    property int persistentCount: 7
+    property int persistentCount: 5
 
     Repeater {
         model: persistentCount
@@ -30,7 +30,7 @@ ColumnLayout {
 
             property bool hovered: false
 
-            property real targetHeight: isActive ? 75 : (hasWindows ? 50 : 25)
+            property real targetHeight: isActive ? 50 : (hasWindows ? 30 : 15)
 
             Behavior on targetHeight {
                 NumberAnimation {
@@ -59,9 +59,6 @@ ColumnLayout {
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: mouse => {
-                    // Hyprland >= 0.55 gebruikt Lua-dispatchers (hl.dsp.*) i.p.v. de oude
-                    // platte "workspace 2" / "movetoworkspace 2" strings. Daarom via hyprctl
-                    // met een Lua-expressie als argument i.p.v. Hyprland.dispatch().
                     if (mouse.button === Qt.LeftButton) {
                         dispatchProcess.command = ["hyprctl", "dispatch", "hl.dsp.focus({workspace = " + pill.wsId.toString() + "})"];
                         dispatchProcess.running = true;

@@ -131,7 +131,7 @@ Item {
                     {
                         name: "Logout",
                         icon: "󰍃",
-                        cmd: ["hyprctl", "dispatch", "exit"]
+                        cmd: ["noctalia", "msg", "session", "logout"]
                     },
                     {
                         name: "Suspend",

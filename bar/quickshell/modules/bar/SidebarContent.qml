@@ -23,7 +23,7 @@ Item {
     signal notificationsClicked(real clickY)
     signal powerClicked(real clickY)
 
-    width: 28
+    width: 17
     implicitWidth: barRoot.width
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -90,7 +90,7 @@ Item {
                     text: "󰎈"
                     color: barRoot.fgColor
                     font.family: barRoot.fontFamily
-                    font.pixelSize: 23
+                    font.pixelSize: 18
                 }
             }
 
@@ -109,7 +109,7 @@ Item {
             text: ""
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 20
+            font.pixelSize: 15
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
@@ -122,61 +122,41 @@ Item {
             }
         }
 
-        Text {
+        Wifidots {
             id: wifiWidget
-            text: "󰤨"
-            color: barRoot.fgColor
-            font.family: barRoot.fontFamily
-            font.pixelSize: 19
             Layout.alignment: Qt.AlignHCenter
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: {
-                    let mapped = wifiWidget.mapToItem(barRoot.parent, 0, 0);
-                    barRoot.wifiClicked(mapped.y + wifiWidget.height / 2);
-                }
+            onClicked: {
+                let mapped = wifiWidget.mapToItem(barRoot.parent, 0, 0);
+                barRoot.wifiClicked(mapped.y + wifiWidget.height / 2);
             }
         }
 
-        Text {
-            id: notificationsWidget
-            text: "󰂚"
-            color: barRoot.fgColor
-            font.family: barRoot.fontFamily
-            font.pixelSize: 19
-            Layout.alignment: Qt.AlignHCenter
+        //         Text {
+        //             id: notificationsWidget
+        //             text: "󰂚"
+        //             color: barRoot.fgColor
+        //             font.family: barRoot.fontFamily
+        //             font.pixelSize: 14
+        //             Layout.alignment: Qt.AlignHCenter
+        //
+        //             MouseArea {
+        //                 anchors.fill: parent
+        //                 cursorShape: Qt.PointingHandCursor
+        //                 onClicked: {
+        //                     let mapped = notificationsWidget.mapToItem(barRoot.parent, 0, 0);
+        //                     barRoot.notificationsClicked(mapped.y + notificationsWidget.height / 2);
+        //                 }
+        //             }
+        //         }
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: {
-                    let mapped = notificationsWidget.mapToItem(barRoot.parent, 0, 0);
-                    barRoot.notificationsClicked(mapped.y + notificationsWidget.height / 2);
-                }
-            }
-        }
-
-        // Text {
-        //     text: "⏻"
-        //     color: barRoot.fgColor
-        //     font.family: barRoot.fontFamily
-        //     font.pixelSize: 20
-        //     Layout.alignment: Qt.AlignHCenter
-        //     MouseArea {
-        //         anchors.fill: parent
-        //         cursorShape: Qt.PointingHandCursor
-        //         onClicked: Quickshell.execDetached(["wlogout", "-b", "5"])
-        //     }
-        // }
+        Battery {}
 
         Text {
             id: powerWidget // <- ID toevoegen
             text: "⏻"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 20
+            font.pixelSize: 14
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
