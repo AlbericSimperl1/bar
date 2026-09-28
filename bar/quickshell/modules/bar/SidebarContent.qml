@@ -23,7 +23,7 @@ Item {
     signal notificationsClicked(real clickY)
     signal powerClicked(real clickY)
 
-    width: 17
+    width: 20
     implicitWidth: barRoot.width
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -47,7 +47,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
-        spacing: 12
+        spacing: 15
 
         Item {
             id: mediaWidget
@@ -109,7 +109,7 @@ Item {
             text: ""
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 15
+            font.pixelSize: 17
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {
@@ -151,12 +151,14 @@ Item {
 
         Battery {}
 
+        Brightness {}
+
         Text {
             id: powerWidget // <- ID toevoegen
             text: "⏻"
             color: barRoot.fgColor
             font.family: barRoot.fontFamily
-            font.pixelSize: 14
+            font.pixelSize: 17
             Layout.alignment: Qt.AlignHCenter
 
             MouseArea {

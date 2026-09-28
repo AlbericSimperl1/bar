@@ -10,7 +10,7 @@ Item {
     readonly property real percentage: battery ? battery.percentage : 0
     readonly property bool isCharging: battery ? (battery.state === UPowerDeviceState.Charging || battery.state === UPowerDeviceState.FullyCharged) : false
 
-    implicitWidth: isCharging ? 18 : 7
+    implicitWidth: isCharging ? 18 : 6
     implicitHeight: isCharging ? 20 : 35
 
     Layout.preferredWidth: implicitWidth

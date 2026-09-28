@@ -45,7 +45,7 @@ Item {
     readonly property int activeDots: {
         if (!isConnected)
             return 0;
-        if (signalStrength >= 0.66)
+        if (signalStrength >= 0.75)
             return 3;
         if (signalStrength >= 0.33)
             return 2;
@@ -58,9 +58,9 @@ Item {
 
         // Bovenste stip
         Rectangle {
-            width: 4
-            height: 4
-            radius: 2
+            width: 6
+            height: 6
+            radius: 6
             anchors.horizontalCenter: parent.horizontalCenter
             color: wifiDotsRoot.activeDots >= 3 ? Qt.rgba(1, 1, 1, 0.95) : Qt.rgba(1, 1, 1, 0.25)
             Behavior on color {
@@ -72,9 +72,9 @@ Item {
 
         // Middelste stip
         Rectangle {
-            width: 4
-            height: 4
-            radius: 2
+            width: 6
+            height: 6
+            radius: 6
             anchors.horizontalCenter: parent.horizontalCenter
             color: wifiDotsRoot.activeDots >= 2 ? Qt.rgba(1, 1, 1, 0.95) : Qt.rgba(1, 1, 1, 0.25)
             Behavior on color {
@@ -86,9 +86,9 @@ Item {
 
         // Onderste stip
         Rectangle {
-            width: 4
-            height: 4
-            radius: 2
+            width: 6
+            height: 6
+            radius: 6
             anchors.horizontalCenter: parent.horizontalCenter
             color: wifiDotsRoot.activeDots >= 1 ? Qt.rgba(1, 1, 1, 0.95) : Qt.rgba(1, 1, 1, 0.25)
             Behavior on color {

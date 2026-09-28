@@ -19,12 +19,12 @@ ShellRoot {
     readonly property color borderCol: "#2cffffff"
     readonly property string fontFamily: "Mononoki Nerd Font Mono"
 
-    readonly property int sidebarWidth: 17
+    readonly property int sidebarWidth: 20
     readonly property int marginSize: 0
     readonly property int barRadius: 0
 
     readonly property int panelMaxWidth: 400
-    readonly property int panelMaxHeight: 410
+    readonly property int panelMaxHeight: 455
     readonly property int panelMinHeight: 140
     readonly property int panelGap: 8
     readonly property int panelRadius: 3

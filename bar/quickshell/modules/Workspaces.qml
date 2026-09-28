@@ -39,7 +39,7 @@ ColumnLayout {
                 }
             }
 
-            Layout.preferredWidth: 7
+            Layout.preferredWidth: 6
             Layout.preferredHeight: targetHeight
             Layout.alignment: Qt.AlignHCenter
             radius: 100
